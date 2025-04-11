@@ -1,6 +1,5 @@
 plugins {
     id 'scala'
-    id 'application'
 }
 
 repositories {
@@ -10,10 +9,12 @@ repositories {
 dependencies {
     implementation 'org.scala-lang:scala-library:2.13.12'
     implementation 'com.google.code.gson:gson:2.10.1'
-    testImplementation 'org.scalatest:scalatest_2.13:3.2.15'
-    testRuntimeOnly 'org.pegdown:pegdown:1.6.0'
 }
 
-application {
-    mainClass = 'stats.GenerateStatsByTxn'
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala']
+        }
+    }
 }
