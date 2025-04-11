@@ -9,6 +9,9 @@ THIS WILL REPLACE THE AGGREGATED METRICS USED BY THE GATLING JENKINS PLUGIN WITH
 
 object GenerateStatsByTxn {
   def main(args: Array[String]): Unit = {
+
+    val transactionNamesToGraph = if (args.isEmpty) Set("") else args.toSet
+
     // Get the base directory for Gatling reports
     val baseDir = new File("build/reports/gatling/")
 
@@ -41,6 +44,6 @@ object GenerateStatsByTxn {
 
     println(s"Successfully loaded stats.json from: ${statsJsonPath.getAbsolutePath}")
 
-    StatsGenerator.run(statsJsonPath)
+    StatsGenerator.run(statsJsonPath, transactionNamesToGraph)
   }
 }

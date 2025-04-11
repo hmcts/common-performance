@@ -13,9 +13,7 @@ object StatsGenerator {
   // Define the list of custom transaction names you want to graph in Jenkins
   // Note, the Jenkins plugin will also graph the aggregated simulation metrics by default
 
-  val transactionNamesToGraph = Set("CCDCacheWarm_000_Auth", "CCDCacheWarm_000_LoadJurisdictions")
-
-  def run(statsFile: File): Unit = {
+  def run(statsFile: File, transactionNamesToGraph: Set[String]): Unit = {
     if (!statsFile.exists()) {
       println(s"[StatsGenerator] stats.json not found: ${statsFile.getAbsolutePath}")
       return
