@@ -34,6 +34,13 @@ object StatsGenerator {
       return
     }
 
+    if (transactionNamesToGraph.nonEmpty) {
+      println(s"[StatsGenerator] Generating stats for the following transactions: ${transactionNamesToGraph.mkString(", ")}")
+    } else {
+      println("[StatsGenerator] No transactions specified. No stats will be generated.")
+      return
+    }
+
     val contents = jsonElement.getAsJsonObject.getAsJsonObject("contents")
 
     for (entry <- contents.entrySet().asScala) {
