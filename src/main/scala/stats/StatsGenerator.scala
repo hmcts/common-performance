@@ -15,8 +15,7 @@ object StatsGenerator {
 
   def run(statsFile: File, transactionNamesToGraph: Set[String]): Unit = {
     if (!statsFile.exists()) {
-      println(s"[StatsGenerator] stats.json not found: ${statsFile.getAbsolutePath}")
-      return
+      throw new Exception(s"stats.json not found: ${statsFile.getAbsolutePath}")
     }
 
     println(s"[StatsGenerator] Reading stats.json from: ${statsFile.getAbsolutePath}")
@@ -30,8 +29,7 @@ object StatsGenerator {
     }
 
     if (!jsonElement.isJsonObject || !jsonElement.getAsJsonObject.has("contents")) {
-      println("[StatsGenerator] Invalid stats.json format")
-      return
+      throw new Exception(s"Invalid stats.json format")
     }
 
     if (transactionNamesToGraph.nonEmpty) {

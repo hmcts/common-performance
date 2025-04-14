@@ -1,5 +1,6 @@
 plugins {
     id 'scala'
+    id 'java-library'
 }
 
 repositories {
@@ -9,12 +10,18 @@ repositories {
 dependencies {
     implementation 'org.scala-lang:scala-library:2.13.12'
     implementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation 'org.scalatest:scalatest_2.13:3.2.17'
 }
 
-sourceSets {
-    main {
-        scala {
-            srcDirs = ['src/main/scala']
-        }
-    }
+task scalaTest(type: JavaExec) {
+    group = "verification"
+    description = "Runs ScalaTest tests using the ScalaTest runner"
+
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass.set("org.scalatest.tools.Runner")
+
+    args = [
+            "-R", "build/classes/scala/test",
+            "-oD"
+    ]
 }
