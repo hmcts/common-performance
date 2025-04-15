@@ -10,7 +10,12 @@ THIS WILL REPLACE THE AGGREGATED METRICS USED BY THE GATLING JENKINS PLUGIN WITH
 object GenerateStatsByTxn {
   def main(args: Array[String]): Unit = {
 
-    val transactionNamesToGraph = if (args.isEmpty) Set("") else args.toSet
+    if (args.isEmpty) {
+      println("No transaction names provided. Not running the stats generation process.")
+      return
+    }
+
+    val transactionNamesToGraph = args.toSet
 
     // Get the base directory for Gatling reports
     val baseDir = new File("build/reports/gatling/")
