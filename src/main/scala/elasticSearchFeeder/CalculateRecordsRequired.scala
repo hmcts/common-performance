@@ -9,7 +9,7 @@ object CalculateRecordsRequired {
         math.round(targetIterationsPerHour / 60 * testDurationMins).toInt +
         math.round(targetIterationsPerHour / 60 * rampDownDurationMins / 2).toInt
 
-    val recordsRequiredOverride = ElasticSearchFeederConfig.RECORDS_REQUIRED_OVERRIDE
+    val recordsRequiredOverride = ElasticSearchFeederConfig.config.RECORDS_REQUIRED_OVERRIDE
 
     val elasticSearchRecordsToRequest = if (recordsRequiredOverride == -1) {
       recordsRequiredCalculated // return the calculated value

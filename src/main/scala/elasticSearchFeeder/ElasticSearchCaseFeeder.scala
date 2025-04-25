@@ -7,7 +7,7 @@ object ElasticSearchCaseFeeder {
 
   def feeder(feederType: FeederType, recordsRequired: Int): Feeder[String] = {
 
-    if (ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE) {
+    if (ElasticSearchFeederConfig.config.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE) {
       println("INFO: CSV file override enabled, using CSV feeder.")
       csv("caseIds.csv").circular().asInstanceOf[Feeder[String]]
     }

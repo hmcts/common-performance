@@ -19,21 +19,21 @@ object FetchCasesFromElasticSearch {
     println("Hostname: " + hostname)
 
     // Set ElasticSearch server based on the hostname
-    val ELASTICSEARCH_SERVER: String = if (ElasticSearchFeederConfig.hostnameStringsWithDirectElasticSearchConnectivity.exists(hostname.contains)) {
-      val esServer = ElasticSearchFeederConfig.ELASTICSEARCH_SERVER_DIRECT + ":" + ElasticSearchFeederConfig.ELASTICSEARCH_SERVER_PORT
+    val ELASTICSEARCH_SERVER: String = if (ElasticSearchFeederConfig.config.hostnameStringsWithDirectElasticSearchConnectivity.exists(hostname.contains)) {
+      val esServer = ElasticSearchFeederConfig.config.ELASTICSEARCH_SERVER_DIRECT + ":" + ElasticSearchFeederConfig.config.ELASTICSEARCH_SERVER_PORT
       println("Using ElasticSearch direct URL (you must be on an Azure VM or Jenkins Slave): " + esServer)
       esServer
     } else {
-      val esServer = ElasticSearchFeederConfig.ELASTICSEARCH_SERVER_LOCAL + ":" + ElasticSearchFeederConfig.ELASTICSEARCH_SERVER_PORT
+      val esServer = ElasticSearchFeederConfig.config.ELASTICSEARCH_SERVER_LOCAL + ":" + ElasticSearchFeederConfig.config.ELASTICSEARCH_SERVER_PORT
         println("Using ElasticSearch local URL (tunneling through the bastion): " + esServer)
       esServer
     }
 
     // Elasticsearch endpoint for the query
-    val endpoint = s"http://${ELASTICSEARCH_SERVER}/${ElasticSearchFeederConfig.ELASTICSEARCH_INDEX}/_search"
+    val endpoint = s"http://${ELASTICSEARCH_SERVER}/${ElasticSearchFeederConfig.config.ELASTICSEARCH_INDEX}/_search"
 
     // Read the JSON file as a string
-    val jsonFilePath = ElasticSearchFeederConfig.ELASTICSEARCH_QUERY_PATH
+    val jsonFilePath = ElasticSearchFeederConfig.config.ELASTICSEARCH_QUERY_PATH
     val jsonString = new String(Files.readAllBytes(Paths.get(jsonFilePath)), StandardCharsets.UTF_8)
 
     // Parse the JSON string into a JsonObject using Gson
