@@ -33,7 +33,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
 
   test("ElasticSearchCaseFeeder should use ElasticSearch response when OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE is false") {
     // Simulate ElasticSearch behavior (no CSV override)
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = false
+    TestElasticSearchFeederConfig.overrideCsvFile(false)
     val feederType = FeederType.QUEUE
     val recordsRequired = 3
 
@@ -48,7 +48,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
 
   test("ElasticSearchCaseFeeder should fallback to CSV when OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE is true") {
     // Simulate CSV override being active
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = true
+    TestElasticSearchFeederConfig.overrideCsvFile(true)
     val feederType = FeederType.QUEUE
     val recordsRequired = 3
 
@@ -63,7 +63,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
 
   test("ElasticSearchCaseFeeder should throw an error if not enough records are returned from ElasticSearch") {
     // Simulate a case where ElasticSearch doesn't return enough records
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = false
+    TestElasticSearchFeederConfig.overrideCsvFile(false)
     val feederType = FeederType.QUEUE
     val recordsRequired = 5  // More records requested than available
 
@@ -74,7 +74,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
 
   test("ElasticSearchCaseFeeder should handle circular feeder type") {
     // Simulate Circular Feeder behavior
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = false
+    TestElasticSearchFeederConfig.overrideCsvFile(false)
     val feederType = FeederType.CIRCULAR
     val recordsRequired = 3
 
@@ -90,7 +90,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
 
   test("ElasticSearchCaseFeeder should shuffle feeder type") {
     // Simulate Shuffle Feeder behavior
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = false
+    TestElasticSearchFeederConfig.overrideCsvFile(false)
     val feederType = FeederType.SHUFFLE
     val recordsRequired = 3
 
@@ -104,7 +104,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
   }
 
   test("ElasticSearchCaseFeeder should handle random feeder type") {
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = false
+    TestElasticSearchFeederConfig.overrideCsvFile(false)
     val feederType = FeederType.RANDOM
     val recordsRequired = 3
 
@@ -123,7 +123,7 @@ class ElasticSearchCaseFeederSpec extends AnyFunSuite with BeforeAndAfter {
 
   test("ElasticSearchCaseFeeder should handle empty response from ElasticSearch") {
     // Simulate an empty response from ElasticSearch
-    ElasticSearchFeederConfig.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE = false
+    TestElasticSearchFeederConfig.overrideCsvFile(false)
     val feederType = FeederType.QUEUE
     val recordsRequired = 0  // Requesting zero records
 

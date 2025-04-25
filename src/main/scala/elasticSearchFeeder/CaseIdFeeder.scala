@@ -14,7 +14,7 @@ class CaseIdFeeder(caseIds: List[String], feederType: FeederType) {
       val caseIdList = if (feederType == FeederType.SHUFFLE) Random.shuffle(caseIds) else caseIds
       caseIdList.foreach { caseId =>
         queue.offer(Map("caseId" -> caseId))
-        println(s"CASE ID (${feederType}): $caseId")
+        println(s"CASE ID (${feederType}): $caseId") //DEBUG LOG: Outputs the list of cases in the feeder
       }
 
       Iterator.continually {

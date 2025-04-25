@@ -2,7 +2,7 @@ package elasticSearchFeeder
 
 object CalculateRecordsRequired {
 
-  def calculate(targetIterationsPerHour: Double, rampUpDurationMins: Int, testDurationMins: Int, rampDownDurationMins: Int) = {
+  def calculate(targetIterationsPerHour: Double, rampUpDurationMins: Int, testDurationMins: Int, rampDownDurationMins: Int): Int = {
 
     val recordsRequiredCalculated: Int =
       math.round(targetIterationsPerHour / 60 * rampUpDurationMins / 2).toInt +
@@ -11,7 +11,7 @@ object CalculateRecordsRequired {
 
     val recordsRequiredOverride = ElasticSearchFeederConfig.config.RECORDS_REQUIRED_OVERRIDE
 
-    val elasticSearchRecordsToRequest = if (recordsRequiredOverride == -1) {
+    if (recordsRequiredOverride == -1) {
       recordsRequiredCalculated // return the calculated value
     } else {
       println("INFO: Automatic calculation of data required has been manually overridden in the config - requesting "
