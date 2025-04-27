@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 
 object ElasticSearchCaseFeeder {
 
-  def feeder(feederType: FeederType, recordsRequired: Int): Feeder[String] = {
+  def feeder(esIndex: String, esQueryFilePath: String, feederType: FeederType, recordsRequired: Int): Feeder[String] = {
 
     if (ElasticSearchFeederConfig.config.OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE) {
       println("INFO: CSV file override enabled, using CSV feeder.")
@@ -13,7 +13,7 @@ object ElasticSearchCaseFeeder {
     }
     else {
       println("INFO: Creating ElasticSearch feeder...")
-      val caseIds = FetchCasesFromElasticSearch.fetchCaseIds(recordsRequired)
+      val caseIds = FetchCasesFromElasticSearch.fetchCaseIds(esIndex, esQueryFilePath, recordsRequired)
 
       if (caseIds.size < recordsRequired) {
         println(s"ERROR: Only ${caseIds.size} records fetched, but $recordsRequired required.")

@@ -96,8 +96,15 @@ val iterations = if (debugMode == "off") CalculateRecordsRequired.calculate(1000
 
 ElasticSearchFeederConfig.set(UserElasticSearchFeederConfig) // required to override config defaults
 
-val caseIdFeeder = ElasticSearchCaseFeeder.feeder(FeederType.QUEUE, iterations) // define the Feeder Type you require (QUEUE, CIRCULAR, SHUFFLE, RANDOM)
+val caseIdFeeder = ElasticSearchCaseFeeder.feeder(esIndex, esQueryFilePath, feederType, iterations)
 ```
+When calling `ElasticSearchFeeder.feeder()`, replace:
+- esIndex value with the ElasticSearch index to perform the search against (listed in the ElasticSearchFeederConfig file)
+  - example: `esIndex.ET-EnglandWales`
+- esQueryFilePath with a location of your JSON file containing the ElasticSearch query string
+  - example: `"elasticSearchQuery.json"`
+- FeederType with the FeederType you require (QUEUE, CIRCULAR, SHUFFLE, RANDOM)
+  - example: `FeederType.QUEUE`
 
 For reference, `CalculateRecordsRequired.calculate` takes the following arguments, which are likely already defined in your simulation:
 
@@ -119,6 +126,44 @@ def getServiceToken(caseIdFeeder: Iterator[Map[String, Any]]) =
   .exec(...)
 ```
 
+Finally, you will need a JSON file containing a valid ElasticSearch 
+query to execute against the `/_search` endpoint. This should return 
+the `reference` field, as this contains the CCD case ID that will be extracted 
+into the feeder (see example below).
+
+<details>
+  <summary>ElasticSearch Query Example (click to expand)</summary>
+
+```JSON
+{
+  "_source": [
+    "reference"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "state": "Accepted"
+          }
+        },
+        {
+          "match": {
+            "data.claimant": "Perf Test"
+          }
+        },
+        {
+          "match": {
+            "data.preAcceptCase.dateAccepted": "2024-01-06"
+          }
+        }
+      ]
+    }
+  }
+}
+  ```
+</details>
+
 ---
 
 ## ⚙️ Config Overrides
@@ -136,7 +181,7 @@ object UserElasticSearchFeederConfig extends ElasticSearchFeederConfigDefaultVal
 )
 ```
 
-The default set of configurations can be found here:
+The default set of configurations can be found here, with descriptions of each configuration:
 `/common/common-performance/src/main/scala/elasticSearchFeeder/ElasticSearchFeederConfig`
 
 Ensure you also have:
@@ -154,6 +199,9 @@ ssh -L 9200:ccd-elastic-search-perftest.service.core-compute-perftest.internal:9
 ```
 
 This connects your local port `9200` to the ElasticSearch instance via the nonprod bastion.
+
+To verify the connection, you may navigate to http://localhost:9200/_cat/indices?pretty&v&s=index, which also provides a
+list of indices if the one you require is missing from those defined in the default configuration.
 
 ---
 

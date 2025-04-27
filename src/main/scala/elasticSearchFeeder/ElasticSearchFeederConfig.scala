@@ -5,8 +5,6 @@ case class ElasticSearchFeederConfigDefaultValues(
   ELASTICSEARCH_SERVER_LOCAL: String = "localhost",
   ELASTICSEARCH_SERVER_PORT: String = "9200",
   hostnameStringsWithDirectElasticSearchConnectivity: List[String] = List("mgmt-perf-test-vm", "cnp-jenkins"),
-  ELASTICSEARCH_INDEX: String = "et_englandwales_cases-000001",
-  ELASTICSEARCH_QUERY_PATH: String = "src/gatling/resources/elasticSearchQuery.json",
   RECORDS_REQUIRED_OVERRIDE: Int = -1,
   OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE: Boolean = false
 )
@@ -19,4 +17,16 @@ object ElasticSearchFeederConfig {
   def set(overrideConfig: ElasticSearchFeederConfigDefaultValues): Unit = {
     activeConfig = overrideConfig
   }
+}
+
+object esIndices {
+
+  val ET_EnglandWales = "et_englandwales_cases-000001"
+  val Probate = ""
+  val NFD = ""
+  val IAC = ""
+  val FPL = ""
+  val PRL_C100 = ""
+  val PRL_FL401 = ""
+
 }

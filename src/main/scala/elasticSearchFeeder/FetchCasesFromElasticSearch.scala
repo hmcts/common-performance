@@ -10,7 +10,7 @@ import scala.jdk.CollectionConverters._
 
 object FetchCasesFromElasticSearch {
 
-  def fetchCaseIds(recordsRequired: Int): List[String] = {
+  def fetchCaseIds(esIndex: String, esQueryFilePath: String, recordsRequired: Int): List[String] = {
 
     val httpClient: HttpClient = HttpClient.newHttpClient()
 
@@ -30,11 +30,10 @@ object FetchCasesFromElasticSearch {
     }
 
     // Elasticsearch endpoint for the query
-    val endpoint = s"http://${ELASTICSEARCH_SERVER}/${ElasticSearchFeederConfig.config.ELASTICSEARCH_INDEX}/_search"
+    val endpoint = s"http://${ELASTICSEARCH_SERVER}/${esIndex}/_search"
 
     // Read the JSON file as a string
-    val jsonFilePath = ElasticSearchFeederConfig.config.ELASTICSEARCH_QUERY_PATH
-    val jsonString = new String(Files.readAllBytes(Paths.get(jsonFilePath)), StandardCharsets.UTF_8)
+    val jsonString = new String(Files.readAllBytes(Paths.get(esQueryFilePath)), StandardCharsets.UTF_8)
 
     // Parse the JSON string into a JsonObject using Gson
     val gson = new Gson()
