@@ -8,17 +8,17 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 
 # 📚 Contents
 
-- [About Git Submodules](#about-git-submodules)
-- [Setup Instructions](#setup-instructions)
-- [ElasticSearch Feeder](#elasticsearch-feeder)
-    - [Usage in Simulation](#usage-in-simulation)
-    - [Config Overrides](#config-overrides)
-    - [ElasticSearch Tunnel Setup](#elasticsearch-tunnel-setup)
-- [Stats Generator](#stats-generator)
-    - [Setup in build.gradle](#setup-in-buildgradle)
-    - [Customising Transaction Names](#customising-transaction-names)
-- [Running Tests](#running-tests)
-- [Updating common-performance](#updating-common-performance)
+- [About Git Submodules](#-about-git-submodules)
+- [Setup Instructions](#-setup-instructions)
+- [ElasticSearch Feeder](#-elasticsearch-feeder)
+    - [Usage in Simulation](#-usage-in-simulation)
+    - [Config Overrides](#-config-overrides)
+    - [ElasticSearch Tunnel Setup](#-elasticsearch-tunnel-setup)
+- [Stats Generator](#-stats-generator)
+    - [Setup in build.gradle](#-setup-in-buildgradle)
+    - [Customising Transaction Names](#-customising-transaction-names)
+- [Running Tests](#-running-tests)
+- [Updating common-performance](#-updating-common-performance)
 
 ---
 
