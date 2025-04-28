@@ -283,29 +283,27 @@ All dates are returned in a user-specified format using `java.time.format.DateTi
 
 ```scala
 // Get today's date
-val today = DateUtils.getDateNow("dd/MM/yyyy")
+DateUtils.getDateNow("dd/MM/yyyy")
 
 // Get a fixed past date: 2 years, 3 months, 5 days ago
-val fixedPast = DateUtils.getDatePast("dd/MM/yyyy", years = 2, months = 3, days = 5)
+DateUtils.getDatePast("dd/MM/yyyy", years = 2, months = 3, days = 5)
 
 // Get a random past date: 10-50 years ago (no months or days)
-val randomPast = DateUtils.getDatePastRandom("dd/MM/yyyy", minYears = 10, maxYears = 50)
+DateUtils.getDatePastRandom("dd/MM/yyyy", minYears = 10, maxYears = 50)
 
 // Get a random past date: 10-50 years, 0-11 months, 0-30 days ago
-val randomPastFull = DateUtils.getDatePastRandom("dd/MM/yyyy", minYears = 10, maxYears = 50, minMonths = 0, maxMonths = 11, minDays = 0, maxDays = 30)
+DateUtils.getDatePastRandom("dd/MM/yyyy", minYears = 10, maxYears = 50, minMonths = 0, maxMonths = 11, minDays = 0, maxDays = 30)
 
 // Get a fixed future date: 1 year, 2 months, 15 days from now
-val fixedFuture = DateUtils.getDateFuture("dd/MM/yyyy", years = 1, months = 2, days = 15)
+DateUtils.getDateFuture("dd/MM/yyyy", years = 1, months = 2, days = 15)
 
 // Get a random future date: 5-20 years in future
-val randomFuture = DateUtils.getDateFutureRandom("dd/MM/yyyy", minYears = 5, maxYears = 20)
+DateUtils.getDateFutureRandom("dd/MM/yyyy", minYears = 5, maxYears = 20)
 ```
 In a Gatling scenario, you could use the feature as follows:
 ```scala
 .exec(_.set("dob", DateUtils.getDatePastRandom("dd-MM-yyyy", minYears = 20, maxYears = 50)))
 ```
-
-
 ---
 
 ## 📋 Notes
@@ -313,6 +311,11 @@ In a Gatling scenario, you could use the feature as follows:
 - **Format strings** must follow Java's `DateTimeFormatter` syntax (e.g., `dd/MM/yyyy`, `yyyy-MM-dd`, etc.).
 - **Random functions:**  
   If you only want to randomize years, you can simply provide `minYears` and `maxYears` — other parameters (`minMonths`, `maxMonths`, `minDays`, `maxDays`) are optional and default to `0`.
+- **Using with Gatling:**  
+  If you use a simple val assignment, such as `val dob = DateUtils.getDatePastRandom()`,
+  the method is only called once at runtime, so every virtual user would have the same value for "dob".
+  Using `.set()` or `.setAll()` will ensure each user will call the method to retrieve a value on-demand
+  and save it into the Gatling session.
 
 ---
 
