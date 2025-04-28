@@ -188,7 +188,7 @@ The default set of configurations can be found here, with descriptions of each c
 
 Ensure you also have:
 - An appropriate JSON input file containing the ElasticSearch query
-- A `caseIds.csv` file for overrides (e.g. for debugging)
+- A `caseIds.csv` file for overrides (can be used with the `OVERRIDE_ELASTICSEARCH_WITH_CSV_FILE` configuration override for debugging)
 
 ---
 
