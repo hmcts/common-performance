@@ -94,9 +94,9 @@ A flexible feeder allowing Gatling scenarios to pull dynamic data from ElasticSe
 Add the following to your Gatling simulation:
 
 ```scala
-val iterations = if (debugMode == "off") CalculateRecordsRequired.calculate(1000, 5, 60, 5) else 1
-
 ElasticSearchFeederConfig.set(UserElasticSearchFeederConfig) // required to override config defaults
+
+val iterations = if (debugMode == "off") CalculateRecordsRequired.calculate(1000, 5, 60, 5) else 1
 
 val caseIdFeeder = ElasticSearchCaseFeeder.feeder(esIndex, esQueryFilePath, feederType, iterations)
 ```
@@ -104,9 +104,19 @@ When calling `ElasticSearchFeeder.feeder()`, replace:
 - esIndex value with the ElasticSearch index to perform the search against (listed in the ElasticSearchFeederConfig file)
   - example: `esIndex.ET-EnglandWales`
 - esQueryFilePath with a location of your JSON file containing the ElasticSearch query string
-  - example: `"elasticSearchQuery.json"`
+  - example: `getClass.getClassLoader.getResource("elasticSearchQuery.json").getPath,`
+  - note: the JSON file should reside within the `resources` folder (or a subfolder)
 - FeederType with the FeederType you require (QUEUE, CIRCULAR, SHUFFLE, RANDOM)
   - example: `FeederType.QUEUE`
+
+Example:
+```scala
+val caseIdFeeder = ElasticSearchCaseFeeder.feeder(
+  esIndices.ET_EnglandWales,
+  getClass.getClassLoader.getResource("elasticSearchQuery.json").getPath,
+  FeederType.QUEUE,
+  iterations)
+```
 
 For reference, `CalculateRecordsRequired.calculate` takes the following arguments, which are likely already defined in your simulation:
 
