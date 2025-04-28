@@ -35,7 +35,7 @@ Submodules allow you to keep a Git repository as a subdirectory of another Git r
 
 ---
 
-# ⚙️ Setup Instructions
+# 🧰 Setup Instructions
 
 To add `common-performance` as a submodule into an existing Gatling project, run:
 
@@ -87,7 +87,7 @@ to ensure the changes are picked up.
 
 A flexible feeder allowing Gatling scenarios to pull dynamic data from ElasticSearch.
 
-## ▶️ Usage in Simulation
+## 🚀 Usage in Simulation
 
 Add the following to your Gatling simulation:
 
@@ -210,7 +210,7 @@ list of indices if the one you require is missing from those defined in the defa
 By default, Gatling aggregates all results into a single graph.  
 The Stats Generator feature allows graphing individual transactions (KPIs) in Jenkins reports.
 
-## 🛠️ Setup in `build.gradle`
+## 🔧 Setup in `build.gradle`
 
 Add these configuration sections:
 
@@ -238,7 +238,7 @@ gatlingRun.finalizedBy generateStats
 
 ---
 
-## 🎛️ Customising Transaction Names
+## 🏷 Customising Transaction Names
 
 You can configure which transactions you want to graph by editing:
 
