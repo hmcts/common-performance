@@ -62,7 +62,11 @@ Ensure your `.gitmodules` file includes:
 Include the common-performance project:
 
 ```groovy
+rootProject.name = '<insert-the-name-of-your-Gatling-repo>' //e.g. 'ccd-cache-warm-performance'
+
 include ':common-performance'
+
+project(':common-performance').projectDir = file('common/common-performance')
 ```
 
 ### 3. `build.gradle`
@@ -70,10 +74,17 @@ include ':common-performance'
 Add `common-performance` as a dependency:
 
 ```groovy
-implementation project(':common-performance')
+dependencies {
+  implementation project(':common-performance')
+}
 ```
 
 ---
+
+To pull the latest submodule code at any time, run:
+```bash
+git submodule update --recursive --remote
+```
 
 After adding or updating a submodule, always run:
 
@@ -127,7 +138,7 @@ calculate(targetIterationsPerHour: Double, rampUpDurationMins: Int, testDuration
 Pass the feeder to your scenario function, for example:
 
 ```scala
-CcdCacheWarm.getServiceToken(caseIdFeeder)
+.exec(CcdCacheWarm.getServiceToken(caseIdFeeder))
 ```
 
 And update your scenario method to use the feeder:
@@ -219,8 +230,8 @@ list of indices if the one you require is missing from those defined in the defa
 
 # 📈 Stats Generator
 
-By default, Gatling aggregates all results into a single graph.  
-The Stats Generator feature allows graphing individual transactions (KPIs) in Jenkins reports.
+By default, the Gatling Jenkins plugin aggregates all transaction timings into a single data point on the graph.  
+The Stats Generator feature allows graphing individual transactions (KPIs) in Jenkins pipelines.
 
 ## 🔧 Setup in `build.gradle`
 
