@@ -166,7 +166,7 @@ into the feeder (see example below).
 
 ---
 
-## ⚙️ Config Overrides
+## 🛠 Config Overrides
 
 You can override default feeder settings by creating a custom config file `utils/UserElasticSearchFeederConfig.scala`:
 
