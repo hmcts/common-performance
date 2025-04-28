@@ -96,7 +96,7 @@ Add the following to your Gatling simulation:
 ```scala
 ElasticSearchFeederConfig.set(UserElasticSearchFeederConfig) // required to override config defaults
 
-val iterations = if (debugMode == "off") CalculateRecordsRequired.calculate(1000, 5, 60, 5) else 1
+val iterations = if (debugMode == "off") CalculateRecordsRequired.calculate(targetIterationsPerHour, rampUpDurationMins, testDurationMins, rampDownDurationMins) else 1
 
 val caseIdFeeder = ElasticSearchCaseFeeder.feeder(esIndex, esQueryFilePath, feederType, iterations)
 ```
