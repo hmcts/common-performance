@@ -43,6 +43,9 @@ object FetchCasesFromElasticSearch {
     // Update the JSON object with the new value
     jsonObject.addProperty("size", recordsRequired.toString)
 
+    // Add a total hits object to return the total number of records available
+    jsonObject.addProperty("track_total_hits", true)
+
     // Convert the updated JsonObject back to a JSON string
     val updatedJsonString = gson.toJson(jsonObject)
 
