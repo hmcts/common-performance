@@ -271,13 +271,13 @@ To run tests:
 If updates are needed:
 
 1. **Update** in the source `common-performance` repository (not inside a Gatling repo).
-2. **Run the tests** to verify functionality:
+2. **Add and run tests** to verify functionality:
 
    ```bash
    ./gradlew scalaTest
    ```
 
-3. In each Gatling repo, update the submodule reference:
+3. In each Gatling repo, **update the submodule** reference:
 
    ```bash
    git submodule update --recursive --remote
