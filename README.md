@@ -33,7 +33,7 @@ Submodules allow you to keep a Git repository as a subdirectory of another Git r
 > - Submodules are _not_ automatically updated.
 > - They point to a specific commit of the submodule repo.
 > - Updates to the submodule must be pulled manually.
-> - Changes to the submodule need to be committed separately in your project.
+> - Once updates are pulled, they will need to be committed to your project's repo.
 
 ---
 
