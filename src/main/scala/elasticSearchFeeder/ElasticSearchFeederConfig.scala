@@ -21,12 +21,18 @@ object ElasticSearchFeederConfig {
 
 object esIndices {
 
+  val Adoption = "a58_cases-000001"
+  val Benefit = "benefit_cases-000001"
+  val Civil = "civil_cases-000001"
   val ET_EnglandWales = "et_englandwales_cases-000001"
-  val Probate = ""
-  val NFD = ""
-  val IAC = ""
-  val FPL = ""
-  val PRL_C100 = ""
-  val PRL_FL401 = ""
+  val ET_Scotland = "et_scotland_cases-000001"
+  val FPL = "care_supervision_epo_cases-000001"
+  val FR = "financialremedymvp2_cases-000001"
+  val IA_Asylum = "asylum_cases-000001"
+  val IA_Bail = "bail_cases-000001"
+  val NFD = "nfd_cases-000001"
+  val PRL = "prlapps_cases-000001"
+  val Probate_Caveat = "caveat_cases-000001"
+  val Probate_GoR = "grantofrepresentation_cases-000001"
 
 }

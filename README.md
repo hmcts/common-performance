@@ -35,7 +35,7 @@ Submodules allow you to keep a Git repository as a subdirectory of another Git r
 
 ---
 
-# 🧰 Setup Instructions
+# ⚙️ Setup Instructions
 
 To add `common-performance` as a submodule into an existing Gatling project, run:
 
@@ -249,6 +249,66 @@ ext {
 ```
 
 These names must exactly match the Gatling `group()` or `http()` transaction names from your scenarios.
+
+---
+
+
+
+
+# 🧰 Utilities
+
+## 📅 DateUtils
+
+A simple Scala utility to generate dates for Gatling simulations or other automated tests.  
+Supports generating:
+- the current date
+- past dates (fixed or randomised)
+- future dates (fixed or randomised)
+
+All dates are returned in a user-specified format using `java.time.format.DateTimeFormatter`.
+
+---
+
+## ✨ Features
+
+- Get today's date in any format.
+- Get a past date by subtracting fixed years, months, days.
+- Get a random past date by specifying ranges for years, months, and days.
+- Get a future date by adding fixed years, months, days.
+- Get a random future date by specifying ranges for years, months, and days.
+- Arguments in random functions are **optional** — you only need to provide the ones you want to randomise (years, months, or days).
+
+---
+
+## 💡 Usage Examples
+
+```scala
+// Get today's date
+val today = DateUtils.getDateNow("dd/MM/yyyy")
+
+// Get a fixed past date: 2 years, 3 months, 5 days ago
+val fixedPast = DateUtils.getDatePast("dd/MM/yyyy", years = 2, months = 3, days = 5)
+
+// Get a random past date: 10-50 years ago (no months or days)
+val randomPast = DateUtils.getDatePastRandom("dd/MM/yyyy", minYears = 10, maxYears = 50)
+
+// Get a random past date: 10-50 years, 0-11 months, 0-30 days ago
+val randomPastFull = DateUtils.getDatePastRandom("dd/MM/yyyy", minYears = 10, maxYears = 50, minMonths = 0, maxMonths = 11, minDays = 0, maxDays = 30)
+
+// Get a fixed future date: 1 year, 2 months, 15 days from now
+val fixedFuture = DateUtils.getDateFuture("dd/MM/yyyy", years = 1, months = 2, days = 15)
+
+// Get a random future date: 5-20 years in future
+val randomFuture = DateUtils.getDateFutureRandom("dd/MM/yyyy", minYears = 5, maxYears = 20)
+```
+
+---
+
+## 📋 Notes
+
+- **Format strings** must follow Java's `DateTimeFormatter` syntax (e.g., `dd/MM/yyyy`, `yyyy-MM-dd`, etc.).
+- **Random functions:**  
+  If you only want to randomize years, you can simply provide `minYears` and `maxYears` — other parameters (`minMonths`, `maxMonths`, `minDays`, `maxDays`) are optional and default to `0`.
 
 ---
 
