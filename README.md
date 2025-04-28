@@ -17,6 +17,8 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - [Stats Generator](#-stats-generator)
     - [Setup in build.gradle](#-setup-in-buildgradle)
     - [Customising Transaction Names](#-customising-transaction-names)
+- [Utilities](#-utilities)
+    - [DateUtils](#-dateutils)
 - [Running Tests](#-running-tests)
 - [Updating common-performance](#-updating-common-performance)
 
@@ -252,9 +254,6 @@ These names must exactly match the Gatling `group()` or `http()` transaction nam
 
 ---
 
-
-
-
 # 🧰 Utilities
 
 ## 📅 DateUtils
@@ -301,6 +300,11 @@ val fixedFuture = DateUtils.getDateFuture("dd/MM/yyyy", years = 1, months = 2, d
 // Get a random future date: 5-20 years in future
 val randomFuture = DateUtils.getDateFutureRandom("dd/MM/yyyy", minYears = 5, maxYears = 20)
 ```
+In a Gatling scenario, you could use the feature as follows:
+```scala
+.exec(_.set("dob", DateUtils.getDatePastRandom("dd-MM-yyyy", minYears = 20, maxYears = 50)))
+```
+
 
 ---
 
