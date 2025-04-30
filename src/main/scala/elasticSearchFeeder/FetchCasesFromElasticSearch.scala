@@ -7,6 +7,9 @@ import java.net.{InetAddress, URI}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
 import scala.jdk.CollectionConverters._
+import java.net.ConnectException
+import java.nio.channels.ClosedChannelException
+import scala.util.{Try, Failure, Success}
 
 object FetchCasesFromElasticSearch {
 
@@ -25,7 +28,7 @@ object FetchCasesFromElasticSearch {
       esServer
     } else {
       val esServer = ElasticSearchFeederConfig.config.ELASTICSEARCH_SERVER_LOCAL + ":" + ElasticSearchFeederConfig.config.ELASTICSEARCH_SERVER_PORT
-        println("Using ElasticSearch local URL (tunneling through the bastion): " + esServer)
+      println("Using ElasticSearch local URL (tunneling through the bastion): " + esServer)
       esServer
     }
 
@@ -56,32 +59,56 @@ object FetchCasesFromElasticSearch {
       .POST(HttpRequest.BodyPublishers.ofString(updatedJsonString))
       .build()
 
-    // Send the request and get the response
-    val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-    //Error if ElasticSearch returns no results
-    if (response.body() == "{}") {
-      println("ERROR: ElasticSearch returned no results. Exiting.")
-      sys.exit(1)
+    // Send the request and get the response, with connection error handling
+    val responseTry = Try {
+      httpClient.send(request, HttpResponse.BodyHandlers.ofString())
     }
-    // Check if the response is successful
-    if (response.statusCode() == 200) {
-      // Parse the JSON response using Gson
-      val jsonResponse = JsonParser.parseString(response.body()).getAsJsonObject
 
-      // Navigate to the hits array and extract the total number of Case IDs available from the query (irrespective of the 'size' requested)
-      val hitsCount = jsonResponse.getAsJsonObject("hits").getAsJsonObject("total").get("value").getAsInt
-      println("INFO: ElasticSearch has " + hitsCount.toString + " cases that match your search query")
-      // Navigate to the hits array and extract the Case IDs
-      val hits = jsonResponse.getAsJsonObject("hits").getAsJsonArray("hits")
-      hits.iterator().asScala.toList.flatMap { hitElement =>
-        val hit = hitElement.getAsJsonObject
-        val source = hit.getAsJsonObject("_source")
-        if (source.has("reference")) Some(source.get("reference").getAsString) else None
-      }
-    } else {
-      throw new RuntimeException(s"Failed to fetch data from Elasticsearch: ${response.statusCode()} ${response.body()}")
+    responseTry match {
+      case Success(response) =>
+        // Error if ElasticSearch returns no results
+        if (response.body() == "{}") {
+          println("ERROR: ElasticSearch returned no results. Exiting.")
+          sys.exit(1)
+        }
+
+        // Check if the response is successful
+        if (response.statusCode() == 200) {
+          // Parse the JSON response using Gson
+          val jsonResponse = JsonParser.parseString(response.body()).getAsJsonObject
+
+          // Navigate to the hits array and extract the total number of Case IDs available
+          val hitsCount = jsonResponse.getAsJsonObject("hits").getAsJsonObject("total").get("value").getAsInt
+          println("INFO: ElasticSearch has " + hitsCount.toString + " cases that match your search query")
+
+          // Extract the Case IDs
+          val hits = jsonResponse.getAsJsonObject("hits").getAsJsonArray("hits")
+          hits.iterator().asScala.toList.flatMap { hitElement =>
+            val hit = hitElement.getAsJsonObject
+            val source = hit.getAsJsonObject("_source")
+            if (source.has("reference")) Some(source.get("reference").getAsString) else None
+          }
+        } else {
+          throw new RuntimeException(s"Failed to fetch data from Elasticsearch: ${response.statusCode()} ${response.body()}")
+        }
+
+      case Failure(e: ConnectException) =>
+        println("\n🚫 ERROR: Could not connect to ElasticSearch at localhost:9200")
+        println("💡 It looks like the ElasticSearch tunnel may not be active.")
+        println("👉 Please run the following command before retrying:\n")
+        println("   ssh -L 9200:ccd-elastic-search-perftest.service.core-compute-perftest.internal:9200 bastion-nonprod.platform.hmcts.net\n")
+        sys.exit(1)
+
+      case Failure(e: ClosedChannelException) =>
+        println("\n🚫 ERROR: Connection to ElasticSearch was unexpectedly closed.")
+        println("💡 This may indicate that the ElasticSearch tunnel is not set up.")
+        sys.exit(1)
+
+      case Failure(e) =>
+        println(s"\n❌ Unexpected error while contacting ElasticSearch: ${e.getMessage}")
+        sys.exit(1)
     }
+
   }
 
 }
