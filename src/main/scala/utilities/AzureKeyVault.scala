@@ -6,7 +6,7 @@ import com.azure.security.keyvault.secrets.SecretClientBuilder
 object AzureKeyVault {
   def getSecret(secretName: String, vaultName: String): String = {
     val client = new SecretClientBuilder()
-      .vaultUrl(s"https://${vaultName}.vault.azure.net/")
+      .vaultUrl(s"https://$vaultName.vault.azure.net")
       .credential(new DefaultAzureCredentialBuilder().build())
       .buildClient()
 
