@@ -9,10 +9,6 @@ java {
     }
 }
 
-ext {
-    owaspSuppressionFile = "${project.projectDir}/owasp/owasp-suppressions.xml"
-}
-
 repositories {
     mavenCentral()
 }
