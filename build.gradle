@@ -1,17 +1,16 @@
 plugins {
-    id 'org.owasp.dependencycheck' version '9.0.4'
     id 'scala'
     id 'java-library'
-}
-
-dependencyCheck {
-    suppressionFile = "owasp-suppressions.xml"
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+ext {
+    owaspSuppressionFile = "${project.projectDir}/owasp/owasp-suppressions.xml"
 }
 
 repositories {
