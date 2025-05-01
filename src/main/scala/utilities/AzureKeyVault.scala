@@ -1,4 +1,4 @@
-package utils
+package utilities
 
 import com.azure.identity.DefaultAzureCredentialBuilder
 import com.azure.security.keyvault.secrets.SecretClientBuilder
