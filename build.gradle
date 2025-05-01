@@ -1,6 +1,11 @@
 plugins {
+    id 'org.owasp.dependencycheck' version '9.0.4'
     id 'scala'
     id 'java-library'
+}
+
+dependencyCheck {
+    suppressionFile = "owasp-suppressions.xml"
 }
 
 java {
@@ -18,17 +23,6 @@ dependencies {
     implementation 'org.scala-lang:scala-library:2.13.10'
     implementation 'com.google.code.gson:gson:2.10.1'
     testImplementation 'org.scalatest:scalatest_2.13:3.2.17'
-
-    constraints {
-        implementation 'io.netty:netty-handler:4.1.108.Final'
-        implementation 'io.netty:netty-transport:4.1.108.Final'
-        implementation 'io.netty:netty-codec:4.1.108.Final'
-        implementation 'ch.qos.logback:logback-classic:1.4.11'
-        implementation 'ch.qos.logback:logback-core:1.4.11'
-        implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
-        implementation 'io.pebbletemplates:pebble:3.2.3'
-    }
-
 }
 
 task scalaTest(type: JavaExec) {
