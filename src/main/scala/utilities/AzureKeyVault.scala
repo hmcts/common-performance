@@ -2,6 +2,8 @@ package utilities
 
 import com.azure.identity.{AzureCliCredentialBuilder, DefaultAzureCredentialBuilder}
 import com.azure.security.keyvault.secrets.SecretClientBuilder
+import com.azure.security.keyvault.secrets.models.KeyVaultSecret
+import com.azure.core.exception.ResourceNotFoundException
 
 import java.net.InetAddress
 
@@ -25,10 +27,11 @@ object AzureKeyVault {
   private def getSecretFromKeyVault(vaultName: String, secretName: String): String = {
     val hostname: String = InetAddress.getLocalHost.getHostName
     val vaultUrl = s"https://$vaultName.vault.azure.net"
+    val usingAzureCli = !hostname.contains("cnp-jenkins")
 
     val credential =
-      if (!hostname.contains("cnp-jenkins")) {
-        println("Using Azure CLI credentials")
+      if (usingAzureCli) {
+        println("Using Azure CLI credential")
         new AzureCliCredentialBuilder().build()
       } else {
         println("Using DefaultAzureCredential for Jenkins")
@@ -40,7 +43,27 @@ object AzureKeyVault {
       .credential(credential)
       .buildClient()
 
-    client.getSecret(secretName).getValue
+    try {
+      val secret: KeyVaultSecret = client.getSecret(secretName)
+      println(s"Successfully retrieved secret: $secretName from $vaultName")
+      secret.getValue
+    } catch {
+      case e: ResourceNotFoundException =>
+        System.err.println(s"Error: Secret '$secretName' not found in Key Vault '$vaultName'.")
+        e.printStackTrace()
+        sys.exit(1)
+
+      case e: Exception =>
+        val message = e.getMessage
+        if (usingAzureCli && message.toLowerCase.contains("az login")) {
+          System.err.println("[ERROR] Failed to authenticate using Azure CLI.")
+          System.err.println("Please run `az login` and try again.")
+        } else {
+          System.err.println(s"[ERROR] Failed to retrieve secret '$secretName' from Key Vault '$vaultName': $message")
+        }
+        e.printStackTrace()
+        sys.exit(1)
+    }
   }
 
 }
