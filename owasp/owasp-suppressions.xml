@@ -5,7 +5,6 @@
     <suppress>
         <packageUrl>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.15.0</packageUrl>
         <cve>CVE-2023-35116</cve>
-        <notes>Usage does not involve polymorphic deserialization or untrusted data binding.</notes>
     </suppress>
 
     <!-- logback-classic & logback-core -->
@@ -13,7 +12,6 @@
         <packageUrl>pkg:maven/ch.qos.logback/logback-classic@1.2.12</packageUrl>
         <cve>CVE-2023-6378</cve>
         <cve>CVE-2023-6481</cve>
-        <notes>Logback config is not user-controllable; CVEs are not exploitable in this context.</notes>
     </suppress>
     <suppress>
         <packageUrl>pkg:maven/ch.qos.logback/logback-core@1.2.12</packageUrl>
@@ -27,14 +25,12 @@
         <cve>CVE-2023-44487</cve>
         <cve>CVE-2023-34462</cve>
         <cve>CVE-2025-25193</cve>
-        <notes>Netty use is internal and not exposed to external input in vulnerable ways.</notes>
     </suppress>
 
     <!-- pebble -->
     <suppress>
         <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.1</packageUrl>
         <cve>CVE-2025-1686</cve>
-        <notes>All templates are static and controlled internally; CVE not applicable.</notes>
     </suppress>
 
 </suppressions>
