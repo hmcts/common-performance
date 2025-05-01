@@ -1,7 +1,9 @@
 package utilities
 
-import com.azure.identity.DefaultAzureCredentialBuilder
+import com.azure.identity.{AzureCliCredentialBuilder, DefaultAzureCredentialBuilder}
 import com.azure.security.keyvault.secrets.SecretClientBuilder
+
+import java.net.InetAddress
 
 object AzureKeyVault {
 
@@ -21,12 +23,24 @@ object AzureKeyVault {
   }
 
   private def getSecretFromKeyVault(vaultName: String, secretName: String): String = {
+    val hostname: String = InetAddress.getLocalHost.getHostName
     val vaultUrl = s"https://$vaultName.vault.azure.net"
+
+    val credential =
+      if (!hostname.contains("cnp-jenkins")) {
+        println("Using Azure CLI credentials")
+        new AzureCliCredentialBuilder().build()
+      } else {
+        println("Using DefaultAzureCredential for Jenkins")
+        new DefaultAzureCredentialBuilder().build()
+      }
+
     val client = new SecretClientBuilder()
       .vaultUrl(vaultUrl)
-      .credential(new DefaultAzureCredentialBuilder().build())
+      .credential(credential)
       .buildClient()
 
     client.getSecret(secretName).getValue
   }
+
 }
