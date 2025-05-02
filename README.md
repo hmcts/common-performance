@@ -268,7 +268,7 @@ Ensure you also have:
 
 ## 🌐 ElasticSearch Tunnel Setup
 
-Before running tests against ElasticSearch from your local machine, create a tunnel:
+Before running tests against ElasticSearch from your local machine, connect to the VPN and create a tunnel:
 
 ```bash
 ssh -L 9200:ccd-elastic-search-perftest.service.core-compute-perftest.internal:9200 bastion-nonprod.platform.hmcts.net
