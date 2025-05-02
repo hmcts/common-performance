@@ -33,4 +33,35 @@
         <cve>CVE-2025-1686</cve>
     </suppress>
 
+    <!-- azure-identity -->
+    <suppress>
+        <packageUrl>pkg:maven/com.azure/azure-identity@1.15.4</packageUrl>
+        <cve>CVE-2023-36415</cve>
+        <cve>CVE-2024-35255</cve>
+    </suppress>
+
+    <!-- msal4j -->
+    <suppress>
+        <packageUrl>pkg:maven/com.microsoft.azure/msal4j@1.19.1</packageUrl>
+        <cve>CVE-2024-35255</cve>
+    </suppress>
+
+    <!-- Netty 4.1.112.Final modules -->
+    <suppress>
+        <packageUrl>pkg:maven/io.netty/netty-codec-dns@4.1.112.Final</packageUrl>
+        <cve>CVE-2025-25193</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/io.netty/netty-resolver-dns@4.1.112.Final</packageUrl>
+        <cve>CVE-2025-25193</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/io.netty/netty-resolver-dns-classes-macos@4.1.112.Final</packageUrl>
+        <cve>CVE-2025-25193</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/io.netty/netty-resolver-dns-native-macos@4.1.112.Final</packageUrl>
+        <cve>CVE-2025-25193</cve>
+    </suppress>
+
 </suppressions>
