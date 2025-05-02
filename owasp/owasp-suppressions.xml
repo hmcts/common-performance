@@ -64,4 +64,51 @@
         <cve>CVE-2025-25193</cve>
     </suppress>
 
+    <!-- akka -->
+    <suppress>
+        <packageUrl>pkg:maven/com.typesafe.akka/akka-actor_2.13@2.6.20</packageUrl>
+        <cve>CVE-2023-45865</cve>
+    </suppress>
+
+    <!-- sbt (many modules affected by CVE-2023-46122) -->
+    <suppress>
+        <packageUrl regex="true">pkg:maven/org\.scala-sbt/.+@1\.9\..*</packageUrl>
+        <cve>CVE-2023-46122</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/org.scala-sbt/launcher-interface@1.4.2</packageUrl>
+        <cve>CVE-2023-46122</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/org.scala-sbt/sbinary_2.13@0.5.1</packageUrl>
+        <cve>CVE-2023-46122</cve>
+    </suppress>
+
+    <!-- Bouncy Castle -->
+    <suppress>
+        <packageUrl>pkg:maven/io.gatling/gatling-recorder-bc-shaded@1.73</packageUrl>
+        <cve>CVE-2023-33201</cve>
+    </suppress>
+
+    <!-- logback-core - new CVEs -->
+    <suppress>
+        <packageUrl>pkg:maven/ch.qos.logback/logback-core@1.2.12</packageUrl>
+        <cve>CVE-2024-12798</cve>
+        <cve>CVE-2024-12801</cve>
+    </suppress>
+
+    <!-- Netty 4.1.92 - additional CVEs -->
+    <suppress>
+        <packageUrl regex="true">pkg:maven/io\.netty/.*@4\.1\.92\.Final</packageUrl>
+        <cve>CVE-2024-29025</cve>
+        <cve>CVE-2024-47535</cve>
+        <cve>CVE-2025-24970</cve>
+    </suppress>
+
+    <!-- Pebble additional CVE -->
+    <suppress>
+        <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.1</packageUrl>
+        <cve>CVE-2022-37767</cve>
+    </suppress>
+
 </suppressions>
