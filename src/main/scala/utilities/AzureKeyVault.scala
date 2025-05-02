@@ -58,7 +58,7 @@ object AzureKeyVault {
         if (usingAzureCli && message.toLowerCase.contains("az login")) {
           System.err.println("[ERROR] Failed to authenticate using Azure CLI.")
           System.err.println("Please run `az login` and try again.")
-        } else if (usingAzureCli && message.toLowerCase.contains("Azure CLI not installed")) {
+        } else if (usingAzureCli && message.contains("Azure CLI not installed")) {
           System.err.println("[ERROR] Azure CLI is not installed.")
           System.err.println("Please install Azure CLI and try again.")
         } else {
