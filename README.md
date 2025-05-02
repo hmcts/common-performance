@@ -1,8 +1,14 @@
 # common-performance
 
-A shared library of Gatling utilities designed to make performance testing easier and more powerful across multiple Gatling projects.
+A shared library of utilities designed to make performance testing easier and more powerful across multiple Gatling projects.
 
 This repository is intended to be imported into Gatling projects as a **Git submodule**, allowing common functionality to be reused and updated centrally.
+
+**Current Features:**
+- 📡 ElasticSearch Feeder
+- 📈 Jenkins Stats Generator
+- 🔐 Azure Key Vault Integration
+- 📅 Date Utils
 
 ---
 
@@ -18,6 +24,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
     - [Setup in build.gradle](#-setup-in-buildgradle)
     - [Customising Transaction Names](#-customising-transaction-names)
 - [Utilities](#-utilities)
+    - [Azure Key Vault Integration](#-azure-key-vault-integration)
     - [DateUtils](#-dateutils)
 - [Running Tests](#-running-tests)
 - [Updating common-performance](#-updating-common-performance)
@@ -62,7 +69,7 @@ Ensure your `.gitmodules` file includes:
 Include the common-performance project:
 
 ```groovy
-rootProject.name = '<insert-the-name-of-your-Gatling-repo>' //e.g. 'ccd-cache-warm-performance'
+rootProject.name = '<insert-the-name-of-your-Gatling-repo>' //e.g. 'probate-performance'
 
 include ':common-performance'
 
@@ -76,6 +83,32 @@ Add `common-performance` as a dependency:
 ```groovy
 dependencies {
   implementation project(':common-performance')
+}
+```
+
+Reference the common CVE suppression file:
+
+```groovy
+dependencyCheck {
+    suppressionFile = "common/common-performance/owasp/owasp-suppressions.xml"
+}
+```
+
+Update the Scala version in to at least `2.13.11` to support all the features in this repo:
+
+```groovy
+gatling {
+    scalaVersion '2.13.11'
+}
+```
+
+### 4. `Jenkins_nightly`
+
+Initialise the submodule when cloned by Jenkins by adding the following before the 
+call to `enablePerformanceTest()`:
+```groovy
+afterAlways('checkout') {
+    sh """ git submodule update --init --recursive"""
 }
 ```
 
@@ -94,9 +127,29 @@ After adding or updating a submodule, always run:
 
 to ensure the changes are picked up.
 
+Commit any submodule updates to your project:
+
+```bash
+git add common/common-performance
+git commit -m "Updated common-performance submodule"
+git push
+```
+*Note:* if you plan to change the submodule code, do so in the common-performance repo directly, 
+not in your project's repo. The changes will then be available to all Gatling projects. See the 
+section [Updating common-performance](#-updating-common-performance).
+
+**Cloning a repository that contains a submodule**
+
+Once your project contains the submodule, if you clone your project's repo (for example on a VM), 
+you will also need to run this command to initialise the submodule after cloning.
+
+```bash
+git submodule update --init --recursive
+```
+
 ---
 
-# 📊 ElasticSearch Feeder
+# 📡 ElasticSearch Feeder
 
 A flexible feeder allowing Gatling scenarios to pull dynamic data from ElasticSearch.
 
@@ -112,12 +165,12 @@ val iterations = if (debugMode == "off") CalculateRecordsRequired.calculate(targ
 val caseIdFeeder = ElasticSearchCaseFeeder.feeder(esIndex, esQueryFilePath, feederType, iterations)
 ```
 When calling `ElasticSearchFeeder.feeder()`, replace:
-- esIndex value with the ElasticSearch index to perform the search against (listed in the ElasticSearchFeederConfig file)
+- **esIndex** with the ElasticSearch index to perform the search against (listed in the ElasticSearchFeederConfig file)
   - example: `esIndex.ET-EnglandWales`
-- esQueryFilePath with a location of your JSON file containing the ElasticSearch query string
+- **esQueryFilePath** with a location of your JSON file containing the ElasticSearch query string
   - example: `getClass.getClassLoader.getResource("elasticSearchQuery.json").getPath,`
   - note: the JSON file should reside within the `resources` folder (or a subfolder)
-- FeederType with the FeederType you require (QUEUE, CIRCULAR, SHUFFLE, RANDOM)
+- **FeederType** with the FeederType you require (QUEUE, CIRCULAR, SHUFFLE, RANDOM)
   - example: `FeederType.QUEUE`
 
 Example:
@@ -138,15 +191,15 @@ calculate(targetIterationsPerHour: Double, rampUpDurationMins: Int, testDuration
 Pass the feeder to your scenario function, for example:
 
 ```scala
-.exec(CcdCacheWarm.getServiceToken(caseIdFeeder))
+.exec(MyScenario.getCase(caseIdFeeder))
 ```
 
 And update your scenario method to use the feeder:
 
 ```scala
-def getServiceToken(caseIdFeeder: Iterator[Map[String, Any]]) =
+def getCase(caseIdFeeder: Iterator[Map[String, Any]]) =
   feed(caseIdFeeder)
-  .exec(...)
+  .exec(...) //your usual Gatling code here
 ```
 
 Finally, you will need a JSON file containing a valid ElasticSearch 
@@ -215,7 +268,7 @@ Ensure you also have:
 
 ## 🌐 ElasticSearch Tunnel Setup
 
-Before running tests against ElasticSearch, create a tunnel:
+Before running tests against ElasticSearch from your local machine, create a tunnel:
 
 ```bash
 ssh -L 9200:ccd-elastic-search-perftest.service.core-compute-perftest.internal:9200 bastion-nonprod.platform.hmcts.net
@@ -225,6 +278,8 @@ This connects your local port `9200` to the ElasticSearch instance via the nonpr
 
 To verify the connection, you may navigate to http://localhost:9200/_cat/indices?pretty&v&s=index, which also provides a
 list of indices if the one you require is missing from those defined in the default configuration.
+
+If running from a VM or Jenkins, a tunnel is not required.
 
 ---
 
@@ -245,7 +300,7 @@ configurations {
 
 /* Generate stats per transaction for use in Jenkins */
 ext {
-  transactionNamesToGraph = ["CCDCacheWarm_000_Auth", "CCDCacheWarm_000_LoadJurisdictions"] // set the transactions to graph here
+  transactionNamesToGraph = ["Probate_090_StartApplication", "Probate_250_SubmitApplication"] // set the transactions to graph here
 }
 
 task generateStats(type: JavaExec) {
@@ -276,6 +331,66 @@ These names must exactly match the Gatling `group()` or `http()` transaction nam
 ---
 
 # 🧰 Utilities
+
+## 🔐 **Azure Key Vault Integration**
+
+A utility to securely retrieve secrets (such as client secrets) directly from **Azure Key Vault** using either environment variables or Azure authentication methods.
+
+---
+
+### 🧬 How It Works
+
+- If `CLIENT_SECRET` is set as an environment variable (often set in the Jenkins_nightly file), it will be used.
+- Otherwise, the secret is retrieved from Azure Key Vault using:
+  - **Azure CLI authentication** (`az login`) when running locally or on a VM.
+  - **Managed Identity / DefaultAzureCredential** when running in Jenkins or cloud environments.
+
+---
+
+### 🪪 Local / VM Setup Instructions
+
+Authenticate locally or on a VM and retrieve the required secrets in Gatling:
+
+1. Before running the simulation, always ensure you're logged into Azure via CLI:  
+   ```bash  
+   az login  
+   ```
+
+2. Add the following lines to your Gatling scenario, to fetch the secret from Key Vault 
+based on the vault and secret name passed to the shared function:  
+   ```scala
+   import utilities.AzureKeyVault
+   
+   val clientSecret = AzureKeyVault.loadClientSecret("ccd-perftest", "ccd-api-gateway-oauth2-client-secret")  
+   ```
+
+3. Pass the client secret as a form parameter in any request as usual:
+   ```scala
+   .formParam("client_secret", clientSecret)
+   ```
+ 
+4. Delete `/arc/gatling/resources/application.conf` as this is no longer required.
+
+5. Remove the following code from your Gatling scenario as it is no longer required:
+   ```scala
+   import com.typesafe.config.ConfigFactory
+
+   val clientSecret = ConfigFactory.load.getString("auth.clientSecret")
+   ```
+
+---
+
+### 🚫 Error Handling
+
+- If the secret is missing or cannot be retrieved, the test will exit with an error.
+- If you're not logged in to Azure CLI, you'll see:  
+  ```text
+  Please run `az login` and try again.  
+  ```
+
+This ensures secure and consistent secret management for both local and CI/CD environments.
+
+---
 
 ## 📅 DateUtils
 
@@ -377,6 +492,17 @@ If updates are needed:
    ```bash
    ./gradlew clean build
    ```
+6. **Run the dependency check** to identify CVEs that might need suppressing:
+
+   ```bash
+   ./gradlew dependencyCheckAggregate
+   ```
+7. **Add CVE suppressions** to the following file in the common-performance repo:
+
+   ```text
+   owasp/owasp-suppressions.xml
+   ```
+   *Note:* if CVE suppressions are added, you'll need to repeat steps 1-6 to apply and test the changes.
 
 ---
 
