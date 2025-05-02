@@ -93,8 +93,8 @@ object FetchCasesFromElasticSearch {
         }
 
       case Failure(e: ConnectException) =>
-        println("\n🚫 ERROR: Could not connect to ElasticSearch at localhost:9200")
-        println("💡 It looks like the ElasticSearch tunnel may not be active.")
+        println(s"\n🚫 ERROR: Could not connect to ElasticSearch at $ELASTICSEARCH_SERVER")
+        println("💡 If running locally, the ElasticSearch tunnel may not be active.")
         println("👉 Please run the following command before retrying:\n")
         println("   ssh -L 9200:ccd-elastic-search-perftest.service.core-compute-perftest.internal:9200 bastion-nonprod.platform.hmcts.net\n")
         sys.exit(1)
