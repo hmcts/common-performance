@@ -63,8 +63,8 @@ object AzureKeyVault {
           System.err.println("Please install Azure CLI and try again.")
         } else {
           System.err.println(s"[ERROR] Failed to retrieve secret '$secretName' from Key Vault '$vaultName': $message")
+          e.printStackTrace()
         }
-        e.printStackTrace()
         sys.exit(1)
     }
   }
