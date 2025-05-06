@@ -44,7 +44,7 @@ object CcdHelper {
 
     .pause(1)
 
-  def createEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
+  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
