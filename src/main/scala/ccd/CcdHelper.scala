@@ -14,6 +14,7 @@ object CcdHelper {
 
   def authenticate(email: String, password: String, microservice: String, clientId: String = "ccd_gateway") = {
 
+    /* If the user is already authenticated, re-use the existing tokens stored in the Gatling session */
     doIfOrElse(session => session("authenticatedCcdUser").as[String] == email) {
 
       exec(http("CCD_AuthLease")
@@ -83,12 +84,12 @@ object CcdHelper {
 
     .pause(1)
 
-  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
+  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, eventName: String, payloadPath: String) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
     .exec(http("CCD_GetEventToken")
-      .get(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases/#{caseId}/event-triggers/${eventName}/token")
+      .get(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases/${caseId}/event-triggers/${eventName}/token")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
@@ -98,7 +99,7 @@ object CcdHelper {
     .pause(1)
 
     .exec(http(s"CCD_SubmitEvent_${eventName}")
-      .post(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases/#{caseId}/events")
+      .post(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases/${caseId}/events")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
