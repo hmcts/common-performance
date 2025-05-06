@@ -17,6 +17,13 @@ object CcdCaseTypes {
     microservice = "ccd_data"
   )
 
+  val FPL = CcdCaseType(
+    name = "FPL",
+    jurisdictionId = "PUBLICLAW",
+    caseTypeId = "CARE_SUPERVISION_EPO",
+    microservice = "ccd_data"
+  )
+
   val NFD = CcdCaseType(
     name = "NFD",
     jurisdictionId = "DIVORCE",

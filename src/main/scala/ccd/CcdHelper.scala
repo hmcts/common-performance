@@ -44,6 +44,32 @@ object CcdHelper {
 
     .pause(1)
 
+  def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+    .exec(http("CCD_GetEventToken")
+      .get(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/event-triggers/${eventName}/token")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
+      .header("Content-Type", "application/json")
+      .check(jsonPath("$.token").saveAs("eventToken"))
+    )
+
+    .pause(1)
+
+    .exec(http(s"CCD_CreateCase_${caseType.caseTypeId}")
+      .post(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
+      .header("Content-Type", "application/json")
+      .body(ElFileBody(payloadPath))
+      .check(jsonPath("$.case_type_id").is(caseType.caseTypeId))
+      .check(jsonPath("$.id").saveAs("caseId"))
+    )
+
+    .pause(1)
+
   def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
