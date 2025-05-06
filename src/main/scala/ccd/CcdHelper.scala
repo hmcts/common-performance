@@ -12,37 +12,50 @@ object CcdHelper {
 
   val clientSecret = AzureKeyVault.loadClientSecret("ccd-perftest", "ccd-api-gateway-oauth2-client-secret")
 
-  def authenticate(email: String, password: String, microservice: String, clientId: String = "ccd_gateway") =
+  def authenticate(email: String, password: String, microservice: String, clientId: String = "ccd_gateway") = {
 
-    exec(http("CCD_AuthLease")
-      .post(rpeAPIURL + "/testing-support/lease")
-      .body(StringBody(s"""{"microservice":"$microservice"}""")).asJson
-      .check(regex("(.+)").saveAs("authToken"))
-    )
+    doIfOrElse(session => session("authenticatedCcdUser").as[String] == email) {
 
-    .pause(1)
+      exec(http("CCD_AuthLease")
+        .post(rpeAPIURL + "/testing-support/lease")
+        .body(StringBody(s"""{"microservice":"$microservice"}""")).asJson
+        .check(regex("(.+)").saveAs("authToken"))
+      )
 
-    .exec(http("CCD_GetBearerToken")
-      .post(idamAPIURL + "/o/token")
-      .formParam("grant_type", "password")
-      .formParam("username", s"${email}")
-      .formParam("password", s"${password}")
-      .formParam("client_id", clientId)
-      .formParam("client_secret", clientSecret)
-      .formParam("scope", "openid profile roles")
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .check(jsonPath("$.access_token").saveAs("bearerToken"))
-    )
+      .pause(1)
 
-    .pause(1)
+      .exec(http("CCD_GetBearerToken")
+        .post(idamAPIURL + "/o/token")
+        .formParam("grant_type", "password")
+        .formParam("username", s"${email}")
+        .formParam("password", s"${password}")
+        .formParam("client_id", clientId)
+        .formParam("client_secret", clientSecret)
+        .formParam("scope", "openid profile roles")
+        .header("Content-Type", "application/x-www-form-urlencoded")
+        .check(jsonPath("$.access_token").saveAs("bearerToken"))
+      )
 
-    .exec(http("CCD_GetIdamID")
-      .get(idamAPIURL + "/details")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .check(jsonPath("$.id").saveAs("idamId"))
-    )
+      .pause(1)
 
-    .pause(1)
+      .exec(http("CCD_GetIdamID")
+        .get(idamAPIURL + "/details")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .check(jsonPath("$.id").saveAs("idamId"))
+      )
+
+      //set the email address of the authenticated user in the session so the tokens can be re-used for subsequent calls
+      .exec(_.set("authenticatedCcdUser", email))
+
+      .pause(1)
+    }{
+      exec {
+        session =>
+        println("User is already authenticated - reusing tokens...")
+        session
+      }
+    }
+  }
 
   def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
 
