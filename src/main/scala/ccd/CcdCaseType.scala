@@ -9,6 +9,14 @@ case class CcdCaseType(
 )
 
 object CcdCaseTypes {
+
+  val CCD = CcdCaseType(
+    name = "CCD",
+    jurisdictionId = "N/A",
+    caseTypeId = "N/A",
+    microservice = "ccd_data"
+  )
+
   val NFD = CcdCaseType(
     name = "NFD",
     jurisdictionId = "DIVORCE",
