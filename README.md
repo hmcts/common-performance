@@ -5,6 +5,7 @@ A shared library of utilities designed to make performance testing easier and mo
 This repository is intended to be imported into Gatling projects as a **Git submodule**, allowing common functionality to be reused and updated centrally.
 
 **Current Features:**
+- 📂 CCD Helper
 - 📡 ElasticSearch Feeder
 - 📈 Jenkins Stats Generator
 - 🔐 Azure Key Vault Integration
@@ -16,6 +17,11 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 
 - [About Git Submodules](#-about-git-submodules)
 - [Setup Instructions](#-setup-instructions)
+- [CCD Helper](#-ccd-helper)
+  - [Create a Case](#-create-a-case)
+  - [Add a Case Event](#-add-a-case-event)
+  - [Authentication](#-authentication)
+  - [Case Type Definitions](#-case-type-definitions)
 - [ElasticSearch Feeder](#-elasticsearch-feeder)
     - [Usage in Simulation](#-usage-in-simulation)
     - [Config Overrides](#-config-overrides)
@@ -134,7 +140,7 @@ git add common/common-performance
 git commit -m "Updated common-performance submodule"
 git push
 ```
-*Note:* if you plan to change the submodule code, do so in the common-performance repo directly, 
+> 📢 **Note:** if you plan to change the submodule code, do so in the common-performance repo directly, 
 not in your project's repo. The changes will then be available to all Gatling projects. See the 
 section [Updating common-performance](#-updating-common-performance).
 
@@ -146,6 +152,133 @@ you will also need to run this command to initialise the submodule after cloning
 ```bash
 git submodule update --init --recursive
 ```
+
+---
+
+# 📂 CCD Helper
+
+## 🧭 Overview
+
+A helper utility to simplify authentication and API interactions with 
+CCD Data Store during performance tests.
+
+---
+
+## ✨ Features
+- Authentication via IDAM and Service-to-Service (s2s)
+- Case Creation using prebuilt JSON payloads 
+- Event Submission to add data to existing cases
+- Token reuse to improve efficiency
+
+This utility supports performance test scenarios across jurisdictions and the functions can be particularly
+helpful for progressing cases or creating/updating cases for data prep.
+
+> 📢 **Note:** If the CCD Helper functions are used multiple times within a Gatling scenario (for example to create a case then update it), 
+the user will authenticate for the first request 
+and subsequent requests will reuse the authorisation tokens.
+
+---
+
+## 🚀 Usage
+
+Import the package into your Gatling scenario:
+
+```scala
+import ccd._
+```
+
+### 🏛 Create a Case
+
+Authenticates and creates a case using the specified event and request body.
+
+```scala
+CcdHelper.createCase(userEmail, userPassword, caseType, eventName, payloadPath)
+```
+**Parameters:**
+- `userEmail` – user to authenticate as
+- `userPassword` – password for the user
+- `caseType` – predefined CcdCaseType (e.g. CcdCaseTypes.PROBATE_GrantOfRepresentation)
+- `eventName` – event to trigger (e.g. createCase)
+- `payloadPath` – path to the JSON file body used for case creation
+
+**Example:**
+```scala
+.exec(CcdHelper.createCase(
+  "#{user}", //you could use this in conjunction with a file feeder
+  "#{password}",
+  CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
+  "createCase",
+  "create-case-payload.json"
+))
+```
+
+### 🧾 Add a Case Event
+
+Authenticates and adds an event to an existing case.
+
+```scala
+CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, payloadPath)
+```
+
+**Parameters:**
+- Same as createCase, plus:
+- caseId – the ID of the existing CCD case (could be taken from the Gatling session)
+
+**Example:**
+```scala
+.exec(CcdHelper.addCaseEvent(
+  userEmail = "#{user}", //you could use this in conjunction with a file feeder
+  userPassword = "#{password}",
+  caseType = CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
+  caseId = "#{caseId}",
+  eventName = "submitEvent",
+  payloadPath = "submit-event-payload.json"
+))
+```
+
+Ensure the payload JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs.
+
+### 🔐 Authentication
+
+Authenticates a user via IDAM and retrieves the necessary bearerToken and authToken,
+reusing tokens across multiple requests where possible.
+
+> 📢 **Note:** `createCase` and `addCaseEvent` automatically authenticate as part of the function call,
+so there is no need to call the authenticate method separately.
+
+To authenticate only (e.g. for use with a different CCD API):
+
+```scala
+CcdHelper.authenticate(email, password, microservice)
+```
+
+**Parameters:**
+- `userEmail` – user to authenticate as
+- `userPassword` – password for the user
+- `microservice` – predefined CCD microservice (ccd_data)
+
+**Example:**
+```scala
+.exec(CcdHelper.authenticate(
+  "#{user}", //you could use this in conjunction with a file feeder
+  "#{password}",
+  CcdCaseTypes.CCD.microservice
+))
+```
+
+### 📦 Case Type Definitions
+
+All supported case types are declared in CcdCaseTypes, e.g.:
+
+```scala
+val caseType = CcdCaseTypes.DIVORCE_NFD
+```
+
+Each case type includes:
+- jurisdictionId
+- caseTypeId
+- microservice
+- optional clientId (defaults to ccd_gateway)
 
 ---
 
@@ -502,7 +635,7 @@ If updates are needed:
    ```text
    owasp/owasp-suppressions.xml
    ```
-   *Note:* if CVE suppressions are added, you'll need to repeat steps 1-6 to apply and test the changes.
+   > 📢 **Note:** if CVE suppressions are added, you'll need to repeat steps 1-6 to apply and test the changes.
 
 ---
 
