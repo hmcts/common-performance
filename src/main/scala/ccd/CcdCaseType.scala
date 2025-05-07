@@ -17,18 +17,95 @@ object CcdCaseTypes {
     microservice = "ccd_data"
   )
 
-  val FPL = CcdCaseType(
-    name = "FPL",
+  val ADOPTION_A58 = CcdCaseType(
+    name = "ADOPTION_A58",
+    jurisdictionId = "ADOPTION",
+    caseTypeId = "A58",
+    microservice = "ccd_data"
+  )
+
+  val CIVIL_CIVIL = CcdCaseType(
+    name = "CIVIL_CIVIL",
+    jurisdictionId = "CIVIL",
+    caseTypeId = "CIVIL",
+    microservice = "ccd_data"
+  )
+
+  val CMC_MoneyClaimCase = CcdCaseType(
+    name = "CMC_MoneyClaimCase",
+    jurisdictionId = "CMC",
+    caseTypeId = "MoneyClaimCase",
+    microservice = "ccd_data"
+  )
+
+  val DIVORCE_NFD = CcdCaseType(
+    name = "DIVORCE_NFD",
+    jurisdictionId = "DIVORCE",
+    caseTypeId = "NFD",
+    microservice = "nfdiv_case_api"
+  )
+
+  val EMPLOYMENT_EnglandWales = CcdCaseType(
+    name = "EMPLOYMENT_EnglandWales",
+    jurisdictionId = "EMPLOYMENT",
+    caseTypeId = "ET_EnglandWales",
+    microservice = "ccd_data"
+  )
+
+  val EMPLOYMENT_Scotland = CcdCaseType(
+    name = "EMPLOYMENT_Scotland",
+    jurisdictionId = "EMPLOYMENT",
+    caseTypeId = "ET_Scotland",
+    microservice = "ccd_data"
+  )
+
+  val HRS_HearingRecordings = CcdCaseType(
+    name = "HRS",
+    jurisdictionId = "HRS",
+    caseTypeId = "HearingRecordings",
+    microservice = "ccd_data"
+  )
+
+  val IA_Asylum = CcdCaseType(
+    name = "IA_Asylum",
+    jurisdictionId = "IA",
+    caseTypeId = "Asylum",
+    microservice = "ccd_data"
+  )
+
+  val IA_Bail = CcdCaseType(
+    name = "IA_Bail",
+    jurisdictionId = "IA",
+    caseTypeId = "Bail",
+    microservice = "ccd_data"
+  )
+
+  val PRIVATELAW_PRLAPPS = CcdCaseType(
+    name = "PRIVATELAW_PRLAPPS",
+    jurisdictionId = "PRIVATELAW",
+    caseTypeId = "PRLAPPS",
+    microservice = "ccd_data"
+  )
+
+  val PROBATE_GrantOfRepresentation = CcdCaseType(
+    name = "PROBATE_GrantOfRepresentation",
+    jurisdictionId = "PROBATE",
+    caseTypeId = "GrantOfRepresentation",
+    microservice = "ccd_data"
+  )
+
+  val PUBLICLAW_CARE_SUPERVISION_EPO = CcdCaseType(
+    name = "PUBLICLAW_CARE_SUPERVISION_EPO",
     jurisdictionId = "PUBLICLAW",
     caseTypeId = "CARE_SUPERVISION_EPO",
     microservice = "ccd_data"
   )
 
-  val NFD = CcdCaseType(
-    name = "NFD",
-    jurisdictionId = "DIVORCE",
-    caseTypeId = "NFD",
-    microservice = "nfdiv_case_api"
+  val SSCS_Benefit = CcdCaseType(
+    name = "SSCS_Benefit",
+    jurisdictionId = "SSCS",
+    caseTypeId = "Benefit",
+    microservice = "ccd_data"
   )
 
 }
