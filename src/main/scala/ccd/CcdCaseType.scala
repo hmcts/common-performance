@@ -60,7 +60,7 @@ object CcdCaseTypes {
   )
 
   val HRS_HearingRecordings = CcdCaseType(
-    name = "HRS",
+    name = "HRS_HearingRecordings",
     jurisdictionId = "HRS",
     caseTypeId = "HearingRecordings",
     microservice = "ccd_data"
