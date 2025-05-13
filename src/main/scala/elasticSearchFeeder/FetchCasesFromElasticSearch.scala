@@ -9,7 +9,8 @@ import java.nio.file.{Files, Paths}
 import scala.jdk.CollectionConverters._
 import java.net.ConnectException
 import java.nio.channels.ClosedChannelException
-import scala.util.{Try, Failure, Success}
+import java.time.Duration
+import scala.util.{Failure, Success, Try}
 
 object FetchCasesFromElasticSearch {
 
@@ -56,6 +57,7 @@ object FetchCasesFromElasticSearch {
     val request = HttpRequest.newBuilder()
       .uri(new URI(endpoint))
       .header("Content-Type", "application/json")
+      .timeout(Duration.ofSeconds(30))
       .POST(HttpRequest.BodyPublishers.ofString(updatedJsonString))
       .build()
 
