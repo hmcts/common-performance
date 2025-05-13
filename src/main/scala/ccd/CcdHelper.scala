@@ -15,7 +15,7 @@ object CcdHelper {
   def authenticate(email: String, password: String, microservice: String, clientId: String = "ccd_gateway") = {
 
     /* If the user is already authenticated, re-use the existing tokens stored in the Gatling session */
-    doIfOrElse(session => session("authenticatedCcdUser").as[String] == email) {
+    doIfOrElse(session => !session.contains("authenticatedCcdUser") || session("authenticatedCcdUser").as[String] != email) {
 
       exec(http("CCD_AuthLease")
         .post(rpeAPIURL + "/testing-support/lease")
