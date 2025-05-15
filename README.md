@@ -89,7 +89,7 @@ Add `common-performance` as a dependency:
 
 ```groovy
 dependencies {
-  implementation project(':common-performance')
+  gatlingImplementation project(':common-performance')
 }
 ```
 
