@@ -217,6 +217,9 @@ CcdHelper.createCase(userEmail, userPassword, caseType, eventName, payloadPath)
 - Gatling session variables:
     - `caseId` - the new case reference
 
+Ensure the payload JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs.
+Where necessary, the event JSON should make use of the `eventToken` in the Gatling session, which is generated before the case is created.
+
 ### 🧾 Add a Case Event
 
 Authenticates and adds an event to an existing case.
@@ -241,7 +244,8 @@ CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, pay
 ))
 ```
 
-Ensure the payload JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs.
+Ensure the payload JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs. 
+Where necessary, the event JSON should make use of the `eventToken` in the Gatling session, which is generated before the event is created. 
 
 ### 📤 CDAM Document Upload
 
