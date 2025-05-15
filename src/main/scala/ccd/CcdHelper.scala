@@ -9,6 +9,7 @@ object CcdHelper {
   val idamAPIURL = "https://idam-api.#{env}.platform.hmcts.net"
   val rpeAPIURL = "http://rpe-service-auth-provider-#{env}.service.core-compute-#{env}.internal"
   val ccdAPIURL = "http://ccd-data-store-api-#{env}.service.core-compute-#{env}.internal"
+  val cdamAPIURL = "http://ccd-case-document-am-api-#{env}.service.core-compute-#{env}.internal"
 
   val clientSecret = AzureKeyVault.loadClientSecret("ccd-perftest", "ccd-api-gateway-oauth2-client-secret")
 
@@ -108,4 +109,27 @@ object CcdHelper {
     )
 
     .pause(1)
+
+  def uploadDocumentToCdam(userEmail: String, userPassword: String, caseType: CcdCaseType, filepath: String) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+    .exec(_.set("filename", filepath.split("/").last))
+
+    .exec(http("CCD_CDAM_DocumentUpload")
+      .post(cdamAPIURL + "/cases/documents")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
+      .header("Content-Type", "application/json")
+      .formParam("classification", "PUBLIC")
+      .formParam("caseTypeId", s"${caseType.caseTypeId}")
+      .formParam("jurisdictionId", s"${caseType.jurisdictionId}")
+      .bodyPart(RawFileBodyPart("files", s"${filepath}")
+        .fileName("#{filename}")
+        .transferEncoding("binary"))
+      .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("docId"))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken")))
+
+    .pause(1)
+
 }
