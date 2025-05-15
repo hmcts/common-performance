@@ -120,7 +120,7 @@ object CcdHelper {
       .post(cdamAPIURL + "/cases/documents")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
+      .header("Content-Type", "multipart/form-data")
       .formParam("classification", "PUBLIC")
       .formParam("caseTypeId", s"${caseType.caseTypeId}")
       .formParam("jurisdictionId", s"${caseType.jurisdictionId}")
