@@ -253,7 +253,7 @@ uploadDocumentToCdam(userEmail, userPassword, caseType, filepath)
 
 **Example:**
 ```scala
-.exec(CcdHelper.addCaseEvent(
+.exec(CcdHelper.uploadDocumentToCdam(
   userEmail = "#{user}", //you could use this in conjunction with a file feeder
   userPassword = "#{password}",
   caseType = CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
