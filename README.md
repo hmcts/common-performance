@@ -20,6 +20,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - [CCD Helper](#-ccd-helper)
   - [Create a Case](#-create-a-case)
   - [Add a Case Event](#-add-a-case-event)
+  - [CDAM Document Upload](#-cdam-document-upload)
   - [Authentication](#-authentication)
   - [Case Type Definitions](#-case-type-definitions)
 - [ElasticSearch Feeder](#-elasticsearch-feeder)
@@ -222,7 +223,7 @@ CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, pay
 
 **Parameters:**
 - Same as createCase, plus:
-- caseId – the ID of the existing CCD case (could be taken from the Gatling session)
+- `caseId` – the ID of the existing CCD case (could be taken from the Gatling session)
 
 **Example:**
 ```scala
@@ -238,12 +239,38 @@ CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, pay
 
 Ensure the payload JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs.
 
+### 📤 CDAM Document Upload
+
+Authenticates and uploads a document to dm-store via CDAM.
+
+```scala
+uploadDocumentToCdam(userEmail, userPassword, caseType, filepath)
+```
+
+**Parameters:**
+- Same as createCase, plus:
+- `filepath` - the path to the file to upload (within the resources folder)
+
+**Example:**
+```scala
+.exec(CcdHelper.addCaseEvent(
+  userEmail = "#{user}", //you could use this in conjunction with a file feeder
+  userPassword = "#{password}",
+  caseType = CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
+  filepath = "documents/TestDocument.pdf"
+))
+```
+
+Ensure the document is placed in the `resources` directory or a subfolder.
+
+> 📢 **Note:** The document's name will be set to the filename e.g. TestDocument.pdf
+
 ### 🔐 Authentication
 
 Authenticates a user via IDAM and retrieves the necessary bearerToken and authToken,
 reusing tokens across multiple requests where possible.
 
-> 📢 **Note:** `createCase` and `addCaseEvent` automatically authenticate as part of the function call,
+> 📢 **Note:** the functions listed above automatically authenticate as part of the call,
 so there is no need to call the authenticate method separately.
 
 To authenticate only (e.g. for use with a different CCD API):
