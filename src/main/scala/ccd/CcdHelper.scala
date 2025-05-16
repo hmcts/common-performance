@@ -24,16 +24,15 @@ object CcdHelper {
       session.set("resolvedEmail", resolvedEmail)
     }
 
-    /* If the user is already authenticated, re-use the existing tokens stored in the Gatling session */
-    .doIfOrElse(session => !session.contains("authenticatedCcdUser") || session("authenticatedCcdUser").as[String] != session("resolvedEmail").as[String]) {
+    /* If the current user is not already authenticated, do so now.
+    Otherwise it will re-use the existing tokens stored in the Gatling session */
+    .doIf(session => !session.contains("authenticatedCcdUser") || session("authenticatedCcdUser").as[String] != session("resolvedEmail").as[String]) {
 
       exec(http("CCD_AuthLease")
         .post(rpeAPIURL + "/testing-support/lease")
         .body(StringBody(s"""{"microservice":"$microservice"}""")).asJson
         .check(regex("(.+)").saveAs("authToken"))
       )
-
-      .pause(1)
 
       .exec(http("CCD_GetBearerToken")
         .post(idamAPIURL + "/o/token")
@@ -47,8 +46,6 @@ object CcdHelper {
         .check(jsonPath("$.access_token").saveAs("bearerToken"))
       )
 
-      .pause(1)
-
       .exec(http("CCD_GetIdamID")
         .get(idamAPIURL + "/details")
         .header("Authorization", "Bearer #{bearerToken}")
@@ -59,15 +56,8 @@ object CcdHelper {
       .exec {
         session => session.set("authenticatedCcdUser", session("resolvedEmail").as[String])
       }
-
-      .pause(1)
-    }{
-      exec {
-        session =>
-        println("User is already authenticated - reusing tokens...")
-        session
-      }
     }
+
   }
 
   def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
@@ -82,8 +72,6 @@ object CcdHelper {
       .check(jsonPath("$.token").saveAs("eventToken"))
     )
 
-    .pause(1)
-
     .exec(http(s"CCD_CreateCase_${caseType.caseTypeId}")
       .post(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases")
       .header("Authorization", "Bearer #{bearerToken}")
@@ -93,8 +81,6 @@ object CcdHelper {
       .check(jsonPath("$.case_type_id").is(caseType.caseTypeId))
       .check(jsonPath("$.id").saveAs("caseId"))
     )
-
-    .pause(1)
 
   def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, eventName: String, payloadPath: String) =
 
@@ -108,8 +94,6 @@ object CcdHelper {
       .check(jsonPath("$.token").saveAs("eventToken"))
     )
 
-    .pause(1)
-
     .exec(http(s"CCD_SubmitEvent_${eventName}")
       .post(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases/${caseId}/events")
       .header("Authorization", "Bearer #{bearerToken}")
@@ -118,8 +102,6 @@ object CcdHelper {
       .body(ElFileBody(payloadPath))
       .check(jsonPath("$.id"))
     )
-
-    .pause(1)
 
   def uploadDocumentToCdam(userEmail: String, userPassword: String, caseType: CcdCaseType, filepath: String) =
 
@@ -140,7 +122,5 @@ object CcdHelper {
         .transferEncoding("binary"))
       .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("docId"))
       .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken")))
-
-    .pause(1)
 
 }

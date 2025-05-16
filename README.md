@@ -178,6 +178,9 @@ helpful for progressing cases or creating/updating cases for data prep.
 the user will authenticate for the first request 
 and subsequent requests will reuse the authorisation tokens.
 
+> 📢 **Note:** Pause times have not been built into any of the CCD Helper functions, so if you wish to 
+space out requests, do so in the Gatling scenario code.
+
 ---
 
 ## 🚀 Usage
