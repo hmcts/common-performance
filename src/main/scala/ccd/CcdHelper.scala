@@ -15,8 +15,17 @@ object CcdHelper {
 
   def authenticate(email: String, password: String, microservice: String, clientId: String = "ccd_gateway") = {
 
+    exec { session =>
+      val resolvedEmail =
+      /* If the email value passed through is a gatling session reference e.g. "#{username}" then strip out the #{} and
+      retrieve the value of the variable from the session */
+        if (email.matches("""#\{.+}""")) session(email.substring(2, email.length - 1)).as[String]
+        else email
+      session.set("resolvedEmail", resolvedEmail)
+    }
+
     /* If the user is already authenticated, re-use the existing tokens stored in the Gatling session */
-    doIfOrElse(session => !session.contains("authenticatedCcdUser") || session("authenticatedCcdUser").as[String] != email) {
+    .doIfOrElse(session => !session.contains("authenticatedCcdUser") || session("authenticatedCcdUser").as[String] != session("resolvedEmail").as[String]) {
 
       exec(http("CCD_AuthLease")
         .post(rpeAPIURL + "/testing-support/lease")
@@ -47,7 +56,9 @@ object CcdHelper {
       )
 
       //set the email address of the authenticated user in the session so the tokens can be re-used for subsequent calls
-      .exec(_.set("authenticatedCcdUser", email))
+      .exec {
+        session => session.set("authenticatedCcdUser", session("resolvedEmail").as[String])
+      }
 
       .pause(1)
     }{
