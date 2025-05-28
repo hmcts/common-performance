@@ -669,10 +669,11 @@ If updates are needed:
    ```bash
    ./gradlew clean build
    ```
-6. **Run the dependency check** to identify CVEs that might need suppressing:
+6. **Run the dependency check** to identify CVEs that might need suppressing
+   (use `--no-configuration-cache` because the OWASP Dependency Check is not fully compatible with configuration cache):
 
    ```bash
-   ./gradlew dependencyCheckAggregate
+   ./gradlew dependencyCheckAggregate --no-configuration-cache
    ```
 7. **Add CVE suppressions** to the following file in the common-performance repo:
 
