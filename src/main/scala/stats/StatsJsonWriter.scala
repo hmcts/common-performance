@@ -11,7 +11,12 @@ import scala.jdk.CollectionConverters._
 
 /**
  * Automatically collect request stats and write stats.json at the end of the run.
- * Just add `.withStatsEngine = withStatsJson` to the setUp() in your simulation.
+ * Just add the following code to the Gatling simulation:
+ *
+ * before {
+ *   stats.StatsJsonWriter.enableJsonStats()
+ * }
+ *
  */
 trait StatsJsonWriter extends Simulation {
 
@@ -67,11 +72,11 @@ trait StatsJsonWriter extends Simulation {
       engine.logResponse(scenario, groups, requestName, startTimestamp, endTimestamp, status, responseCode, message)
     }
 
-    override def logUserStart(scenario: String, timestamp: Long): Unit =
-      engine.logUserStart(scenario, timestamp)
+    override def logUserStart(scenario: String): Unit =
+      engine.logUserStart(scenario)
 
-    override def logUserEnd(scenario: String, timestamp: Long): Unit =
-      engine.logUserEnd(scenario, timestamp)
+    override def logUserEnd(scenario: String): Unit =
+      engine.logUserEnd(scenario)
 
     override def logGroupEnd(scenario: String, group: GroupBlock, timestamp: Long): Unit =
       engine.logGroupEnd(scenario, group, timestamp)
