@@ -1,114 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-    <!-- jackson-databind -->
-    <suppress>
-        <packageUrl>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.15.0</packageUrl>
-        <cve>CVE-2023-35116</cve>
-    </suppress>
-
-    <!-- logback-classic & logback-core -->
-    <suppress>
-        <packageUrl>pkg:maven/ch.qos.logback/logback-classic@1.2.12</packageUrl>
-        <cve>CVE-2023-6378</cve>
-        <cve>CVE-2023-6481</cve>
-    </suppress>
-    <suppress>
-        <packageUrl>pkg:maven/ch.qos.logback/logback-core@1.2.12</packageUrl>
-        <cve>CVE-2023-6378</cve>
-        <cve>CVE-2023-6481</cve>
-    </suppress>
-
-    <!-- Netty 4.1.92.Final - suppressing across all modules -->
-    <suppress>
-        <packageUrl regex="true">pkg:maven/io\.netty/.*@4\.1\.92\.Final</packageUrl>
-        <cve>CVE-2023-44487</cve>
-        <cve>CVE-2023-34462</cve>
-        <cve>CVE-2025-25193</cve>
-    </suppress>
-
     <!-- pebble -->
     <suppress>
-        <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.1</packageUrl>
+        <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.4</packageUrl>
         <cve>CVE-2025-1686</cve>
+        <cve>CVE-2022-37767</cve>
     </suppress>
 
     <!-- azure-identity -->
     <suppress>
-        <packageUrl>pkg:maven/com.azure/azure-identity@1.15.4</packageUrl>
+        <packageUrl>pkg:maven/com.azure/azure-identity@1.16.1</packageUrl>
         <cve>CVE-2023-36415</cve>
         <cve>CVE-2024-35255</cve>
     </suppress>
 
     <!-- msal4j -->
     <suppress>
-        <packageUrl>pkg:maven/com.microsoft.azure/msal4j@1.19.1</packageUrl>
+        <packageUrl>pkg:maven/com.microsoft.azure/msal4j@1.20.1</packageUrl>
         <cve>CVE-2024-35255</cve>
     </suppress>
 
-    <!-- Netty 4.1.112.Final modules -->
+    <!-- sbt -->
     <suppress>
-        <packageUrl>pkg:maven/io.netty/netty-codec-dns@4.1.112.Final</packageUrl>
-        <cve>CVE-2025-25193</cve>
-    </suppress>
-    <suppress>
-        <packageUrl>pkg:maven/io.netty/netty-resolver-dns@4.1.112.Final</packageUrl>
-        <cve>CVE-2025-25193</cve>
-    </suppress>
-    <suppress>
-        <packageUrl>pkg:maven/io.netty/netty-resolver-dns-classes-macos@4.1.112.Final</packageUrl>
-        <cve>CVE-2025-25193</cve>
-    </suppress>
-    <suppress>
-        <packageUrl>pkg:maven/io.netty/netty-resolver-dns-native-macos@4.1.112.Final</packageUrl>
-        <cve>CVE-2025-25193</cve>
-    </suppress>
-
-    <!-- akka -->
-    <suppress>
-        <packageUrl>pkg:maven/com.typesafe.akka/akka-actor_2.13@2.6.20</packageUrl>
-        <cve>CVE-2023-45865</cve>
-    </suppress>
-
-    <!-- sbt (many modules affected by CVE-2023-46122) -->
-    <suppress>
-        <packageUrl regex="true">pkg:maven/org\.scala-sbt/.+@1\.9\..*</packageUrl>
-        <cve>CVE-2023-46122</cve>
-    </suppress>
-    <suppress>
-        <packageUrl>pkg:maven/org.scala-sbt/launcher-interface@1.4.2</packageUrl>
-        <cve>CVE-2023-46122</cve>
-    </suppress>
-    <suppress>
-        <packageUrl>pkg:maven/org.scala-sbt/sbinary_2.13@0.5.1</packageUrl>
+        <packageUrl>pkg:maven/org.scala-sbt/launcher-interface@1.4.4</packageUrl>
         <cve>CVE-2023-46122</cve>
     </suppress>
 
-    <!-- Bouncy Castle -->
+    <!-- apache -->
     <suppress>
-        <packageUrl>pkg:maven/io.gatling/gatling-recorder-bc-shaded@1.73</packageUrl>
-        <cve>CVE-2023-33201</cve>
-    </suppress>
-
-    <!-- logback-core - new CVEs -->
-    <suppress>
-        <packageUrl>pkg:maven/ch.qos.logback/logback-core@1.2.12</packageUrl>
-        <cve>CVE-2024-12798</cve>
-        <cve>CVE-2024-12801</cve>
-    </suppress>
-
-    <!-- Netty 4.1.92 - additional CVEs -->
-    <suppress>
-        <packageUrl regex="true">pkg:maven/io\.netty/.*@4\.1\.92\.Final</packageUrl>
-        <cve>CVE-2024-29025</cve>
-        <cve>CVE-2024-47535</cve>
-        <cve>CVE-2025-24970</cve>
-    </suppress>
-
-    <!-- Pebble additional CVE -->
-    <suppress>
-        <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.1</packageUrl>
-        <cve>CVE-2022-37767</cve>
+        <packageUrl>pkg:maven/xerces/xercesImpl@2.12.2</packageUrl>
+        <cve>CVE-2017-10355</cve>
     </suppress>
 
 </suppressions>
