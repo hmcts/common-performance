@@ -41,6 +41,7 @@ tasks.named("test") {
     enabled = false
 }
 
+//runs scalaTest on build
 tasks.named("check") {
     dependsOn tasks.named("scalaTest")
 }
