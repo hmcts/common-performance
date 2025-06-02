@@ -23,7 +23,7 @@ dependencies {
     testImplementation 'org.scalatest:scalatest_2.13:3.2.17'
 }
 
-task scalaTest(type: JavaExec) {
+tasks.register('scalaTest', JavaExec) {
     group = "verification"
     description = "Runs ScalaTest tests using the ScalaTest runner"
 
@@ -34,4 +34,13 @@ task scalaTest(type: JavaExec) {
             "-R", "build/classes/scala/test",
             "-oD"
     ]
+}
+
+//disable the default test task as the scalaTest task will be used instead
+tasks.named("test") {
+    enabled = false
+}
+
+tasks.named("check") {
+    dependsOn tasks.named("scalaTest")
 }
