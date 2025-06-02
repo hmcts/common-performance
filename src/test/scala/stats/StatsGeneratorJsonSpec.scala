@@ -6,14 +6,9 @@ import java.nio.file.{Files, Paths}
 import scala.io.Source
 import com.google.gson.JsonParser
 
-class StatsGeneratorSpec extends AnyFunSuite {
+class StatsGeneratorJsonSpec extends AnyFunSuite with StatsTestHelpers {
 
-  // Helper function to load a dummy stats.json for testing
-  def loadDummyStatsFile(fileName: String): File = {
-    new File(getClass.getClassLoader.getResource(fileName).toURI)
-  }
-
-  test("StatsGenerator should skip processing when transaction list is empty") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should skip processing when transaction list is empty") {
     val dummyStatsPath = loadDummyStatsFile("sample_stats.json")
 
     // Pass empty args
@@ -22,26 +17,26 @@ class StatsGeneratorSpec extends AnyFunSuite {
     assert(true)
   }
 
-  test("StatsGenerator should generate stats based on valid stats.json file and create output files") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should generate stats based on valid stats.json file and create output files") {
     val dummyStatsPath = loadDummyStatsFile("sample_stats.json")
     val transactionNames = Set("Transaction_1", "Transaction_2")
 
-    StatsGenerator.run(dummyStatsPath, transactionNames)
+    StatsGenerator.run(dummyStatsPath, transactionNames, Some(s"$outputBaseDir/json"))
 
     // Check if the expected output directory and file are created
-    val outputPath = Paths.get("build/reports/gatling/Transaction_1-simulation-txnStats/js/global_stats.json")
+    val outputPath = Paths.get(s"$outputBaseDir/json/Transaction_1-simulation-txnStats/js/global_stats.json")
     assert(Files.exists(outputPath), s"Output file does not exist: $outputPath")
   }
 
-  test("StatsGenerator should generate correct stats in global_stats.json") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should generate correct stats in global_stats.json") {
     val dummyStatsPath = loadDummyStatsFile("sample_stats.json")
     val transactionNames = Set("Transaction_1")
 
     // Run the stats generator
-    StatsGenerator.run(dummyStatsPath, transactionNames)
+    StatsGenerator.run(dummyStatsPath, transactionNames, Some(s"$outputBaseDir/json"))
 
     // Read and parse the generated JSON content
-    val outputFilePath = "build/reports/gatling/Transaction_1-simulation-txnStats/js/global_stats.json"
+    val outputFilePath = s"$outputBaseDir/json/Transaction_1-simulation-txnStats/js/global_stats.json"
     val outputContent = Source.fromFile(outputFilePath).getLines().mkString
     val jsonObject = JsonParser.parseString(outputContent).getAsJsonObject
 
@@ -57,40 +52,39 @@ class StatsGeneratorSpec extends AnyFunSuite {
     assert(minResponseTime.get("ko").getAsDouble == 500)
   }
 
-  test("StatsGenerator should throw an error for a missing stats.json file") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should throw an error for a missing stats.json file") {
     val dummyStatsPath = new File("nonexistent_path/stats.json")
 
     assertThrows[Exception] {
-      StatsGenerator.run(dummyStatsPath, Set("Transaction_1"))
+      StatsGenerator.run(dummyStatsPath, Set("Transaction_1"), Some(s"$outputBaseDir/json"))
     }
   }
 
-  test("StatsGenerator should not process any transactions not present in stats.json") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should not process any transactions not present in stats.json") {
     val dummyStatsPath = loadDummyStatsFile("sample_stats.json")
     val transactionNames = Set("NonExistentTransaction")
 
     // This simulates processing when the set of transactions contains a transaction not in the stats file
-    StatsGenerator.run(dummyStatsPath, transactionNames)
+    StatsGenerator.run(dummyStatsPath, transactionNames, Some(s"$outputBaseDir/json"))
 
     assert(true)
   }
 
-  test("StatsGenerator should skip processing when stats.json is empty") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should skip processing when stats.json is empty") {
     val emptyStatsPath = loadDummyStatsFile("empty_stats.json")
 
     // This should not throw any exceptions; it should simply skip processing
-    StatsGenerator.run(emptyStatsPath, Set("Transaction_1", "Transaction_2"))
+    StatsGenerator.run(emptyStatsPath, Set("Transaction_1", "Transaction_2"), Some(s"$outputBaseDir/json"))
 
     assert(true)
   }
 
-  test("StatsGenerator should throw an exception on invalid stats.json format") {
+  test("[StatsGeneratorJsonSpec] StatsGenerator should throw an exception on invalid stats.json format") {
     val invalidStatsPath = loadDummyStatsFile("invalid_stats.json")
 
     assertThrows[Exception] {
-      StatsGenerator.run(invalidStatsPath, Set("Transaction_1"))
+      StatsGenerator.run(invalidStatsPath, Set("Transaction_1"), Some(s"$outputBaseDir/json"))
     }
   }
-
 
 }

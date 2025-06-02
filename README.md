@@ -465,6 +465,20 @@ If running from a VM or Jenkins, a tunnel is not required.
 By default, the Gatling Jenkins plugin aggregates all transaction timings into a single data point on the graph.  
 The Stats Generator feature allows graphing individual transactions (KPIs) in Jenkins pipelines.
 
+> 📢 **Note:** In recent versions of Gatling (from 3.11 onwards), Gatling simulations no longer generate stats.json or global_stats.json
+> output files, and the Gatling Jenkins plugin is no longer officially supported. The reports are now driven by HTML and JS.
+> 
+> In order to keep the Gatling Jenkins plugin operational (and to allow custom transaction graphing), the Stats Generator has been 
+> updated for compatibility with all versions of Gatling. Where an older version of Gatling is used, the Stats Generator will read 
+> the `stats.json`. Where a newer version of Gatling is used, the Stats Generator will read the `index.html`.
+> 
+> When using a recent version of Gatling, it is important to **always** add the Stats Generator to your code, otherwise the 
+> Gatling plugin will cease to work on the Jenkins pipeline. Not only does the `global_stats.json` file populate the graph, its 
+> presence also publishes the Gatling report. If the `global_stats.json` isn't generated, the Gatling plugin will not show up at all on 
+> the pipeline page and the reports will not be generated. 
+> See the [plugin code](https://github.com/jenkinsci/gatling-plugin/blob/master/src/main/java/io/gatling/jenkins/GatlingPublisher.java#L108-L168) 
+> for further details.
+
 ## 🔧 Setup in `build.gradle`
 
 Add these configuration sections:
@@ -475,7 +489,7 @@ configurations {
   gatlingRuntimeOnly.extendsFrom runtimeOnly
 }
 
-/* Generate stats per transaction for use in Jenkins */
+/* Generate stats per transaction for use in Jenkins*/
 ext {
   transactionNamesToGraph = ["Probate_090_StartApplication", "Probate_250_SubmitApplication"] // set the transactions to graph here
 }
@@ -503,7 +517,9 @@ ext {
 }
 ```
 
-These names must exactly match the Gatling `group()` or `http()` transaction names from your scenarios.
+These names must exactly match the Gatling `group()` or `http()` transaction names from your scenarios. If you don't wish to 
+graph any custom transactions, you will still need to define an empty set `transactionNamesToGraph = [""]`, as the Stats Generator 
+will need to run to generate the summary stats and Gatling report for Jenkins.
 
 ---
 

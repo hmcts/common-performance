@@ -10,11 +10,6 @@ THIS WILL REPLACE THE AGGREGATED METRICS USED BY THE GATLING JENKINS PLUGIN WITH
 object GenerateStatsByTxn {
   def main(args: Array[String]): Unit = {
 
-    if (args.isEmpty) {
-      println("No transaction names provided. Not running the stats generation process.")
-      return
-    }
-
     val transactionNamesToGraph = args.toSet
 
     // Get the base directory for Gatling reports
@@ -38,17 +33,28 @@ object GenerateStatsByTxn {
     // Sort directories by last modified date to get the latest one
     val latestDir = subDirs.maxBy(_.lastModified)
 
-    // Construct the path to stats.json within the latest directory
+    // Construct the path to stats.json or index.html (based on the version of Gatling being used) within the latest directory
     val statsJsonPath = new File(latestDir, "js/stats.json")
+    val indexHtmlPath = new File(latestDir, "index.html")
 
-    // Check if stats.json exists in the latest directory
-    if (!statsJsonPath.exists()) {
-      println(s"stats.json not found at: $statsJsonPath")
-      return
-    }
+    val statsFile =
+      if (statsJsonPath.exists()) {
+        if (transactionNamesToGraph.isEmpty) {
+          println("No transaction names provided. Not running the stats generation process for stats.json input.")
+          return
+        }
+        println(s"Detected legacy JSON input. Using stats.json from: ${statsJsonPath.getAbsolutePath}")
+        statsJsonPath
+      } else if (indexHtmlPath.exists()) {
+        println(s"stats.json not found, but HTML report has been detected. Falling back to index.html at: ${indexHtmlPath.getAbsolutePath}")
+        indexHtmlPath
+      } else {
+        println(s"Neither stats.json nor index.html found in: $latestDir")
+        return
+      }
 
-    println(s"Successfully loaded stats.json from: ${statsJsonPath.getAbsolutePath}")
+    println(s"Successfully loaded input from: ${statsFile.getAbsolutePath}")
 
-    StatsGenerator.run(statsJsonPath, transactionNamesToGraph)
+    StatsGenerator.run(statsFile, transactionNamesToGraph)
   }
 }
