@@ -53,7 +53,8 @@ Submodules allow you to keep a Git repository as a subdirectory of another Git r
 
 # ⚙️ Setup Instructions
 
-To add `common-performance` as a submodule into an existing Gatling project, run:
+To add `common-performance` as a submodule into an existing Gatling project, run the following from the 
+root folder of your Gatling repository:
 
 ```bash
 git submodule add git@github.com:hmcts/common-performance.git common/common-performance
@@ -93,11 +94,12 @@ dependencies {
 }
 ```
 
-Reference the common CVE suppression file:
+Reference the common CVE suppression file and disable the .NET analyser:
 
 ```groovy
 dependencyCheck {
     suppressionFile = "common/common-performance/owasp/owasp-suppressions.xml"
+    analyzers.assemblyEnabled = false
 }
 ```
 
@@ -494,15 +496,18 @@ ext {
   transactionNamesToGraph = ["Probate_090_StartApplication", "Probate_250_SubmitApplication"] // set the transactions to graph here
 }
 
-task generateStats(type: JavaExec) {
-  dependsOn gatlingRun
-  dependsOn compileGatlingScala
-  mainClass.set('stats.GenerateStatsByTxn')
-  args = transactionNamesToGraph
-  classpath = sourceSets.gatling.runtimeClasspath + project(":common-performance").sourceSets.main.runtimeClasspath
+tasks.register('generateStats', JavaExec) {
+    dependsOn tasks.named('gatlingRun')
+    dependsOn tasks.named('compileGatlingScala')
+    mainClass.set('stats.GenerateStatsByTxn')
+    args = transactionNamesToGraph
+    classpath = sourceSets.gatling.runtimeClasspath + project(":common-performance").sourceSets.main.runtimeClasspath
 }
 
-gatlingRun.finalizedBy generateStats
+// Ensure it runs after Gatling
+tasks.named('gatlingRun') {
+    finalizedBy tasks.named('generateStats')
+}
 ```
 
 ---
