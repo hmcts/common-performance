@@ -56,8 +56,13 @@ Submodules allow you to keep a Git repository as a subdirectory of another Git r
 To add `common-performance` as a submodule into an existing Gatling project, run the following from the 
 root folder of your Gatling repository:
 
+**SSH:**
 ```bash
 git submodule add git@github.com:hmcts/common-performance.git common/common-performance
+```
+**HTTPS**:
+```bash
+git submodule add https://github.com/hmcts/common-performance.git common/common-performance
 ```
 
 Then update your project files as follows:
