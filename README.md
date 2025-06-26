@@ -67,6 +67,14 @@ git submodule add https://github.com/hmcts/common-performance.git common/common-
 
 Then update your project files as follows:
 
+> 📢 **Note:** changes should be made to your **project** files, not those belonging to the submodule.
+> - For example, once you've added the submodule, there will be two build.gradle files
+>   - <project-name>/build.gradle
+>   - <project-name>/common/common-performance/build.gradle
+> - It is important not to confuse these files, and ensure you only edit your project files, not the submobule files.
+> - Where files don't already exist (e.g. settings.gradle), they should be created.
+
+
 ### 1. `.gitmodules`
 
 Ensure your `.gitmodules` file includes:
@@ -79,7 +87,7 @@ Ensure your `.gitmodules` file includes:
 
 ### 2. `settings.gradle`
 
-Include the common-performance project:
+Include the common-performance project (if a `settings.gradle` file does not already exist in your project, create it first):
 
 ```groovy
 rootProject.name = '<insert-the-name-of-your-Gatling-repo>' //e.g. 'probate-performance'
