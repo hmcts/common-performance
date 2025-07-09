@@ -9,12 +9,12 @@ object XuiHelper {
   * Manage Case Homepage
   *===================================================================================*/
 
-  val XUIHomePage = {
+  val Homepage = {
 
     exec(flushHttpCache)
     .exec(flushCookieJar)
 
-    .group("XUI_Homepage") {
+    .group("XUI_000_Homepage") {
       exec(http("XUI_Homepage_HomepageGet")
         .get(xuiUrl)
         .headers(Headers.navigationHeader)
@@ -73,9 +73,9 @@ object XuiHelper {
   * Manage Case Login
   *===================================================================================*/
 
-  val XUILogin = {
+  val Login = {
 
-    group("XUI_Login") {
+    group("XUI_000_Login") {
       exec(http("XUI_Login_LoginRequest")
         .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + xuiUrl + "/oauth2/callback&state=#{state}&nonce=#{nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user%20search-user&prompt=")
         .formParam("username", "#{email}")
@@ -134,18 +134,11 @@ object XuiHelper {
         .header("accept", "application/json, text/plain, */*")
         .check(jsonPath("$.key").notNull))
 
-      //if there is no in-flight case, set the case to 0 for the activity calls
-      .doIf("#{caseId.isUndefined()}") {
-        exec(_.set("caseId", "0"))
-      }
-
       .exec(http("XUI_Login_Jurisdictions")
         .get(xuiUrl + "/aggregated/caseworkers/:uid/jurisdictions?access=read")
         .headers(Headers.commonHeader)
         .header("accept", "application/json")
         .check(substring("id")))
-
-      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(xuiUrl.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
 
       .exec(http("XUI_Login_OrgDetails")
         .get(xuiUrl + "/api/organisation")
@@ -175,9 +168,9 @@ object XuiHelper {
   * Manage Case Logout
   *===================================================================================*/
 
-  val XUILogout =
+  val Logout =
 
-    group("XUI_Logout") {
+    group("XUI_000_Logout") {
       exec(http("XUI_Logout_LogoutRequest")
         .get(xuiUrl + "/auth/logout")
         .headers(Headers.navigationHeader))
