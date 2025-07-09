@@ -175,11 +175,11 @@ object XuiHelper {
   * Manage Case Logout
   *===================================================================================*/
 
-    val XUILogout =
+  val XUILogout =
 
-      group("XUI_Logout") {
-        exec(http("XUI_Logout_LogoutRequest")
-          .get(xuiUrl + "/auth/logout")
-          .headers(Headers.navigationHeader))
-      }
+    group("XUI_Logout") {
+      exec(http("XUI_Logout_LogoutRequest")
+        .get(xuiUrl + "/auth/logout")
+        .headers(Headers.navigationHeader))
+    }
 }
