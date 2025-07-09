@@ -15,7 +15,7 @@ object XuiHelper {
     .exec(flushCookieJar)
 
     .group("XUI_000_Homepage") {
-      exec(http("XUI_Homepage_HomepageGet")
+      exec(http("XUI_Homepage_HomepageRequest")
         .get(xuiUrl)
         .headers(Headers.navigationHeader)
         .header("sec-fetch-site", "none"))
