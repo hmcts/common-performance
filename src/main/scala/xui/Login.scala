@@ -5,9 +5,6 @@ import io.gatling.http.Predef._
 
 object Login {
 
-  val IdamUrl = "https://idam-web-public.#{env}.platform.hmcts.net"
-  val xuiUrl = "https://manage-case.#{env}.platform.hmcts.net"
-
   /*====================================================================================
   * Manage Case Login
   *===================================================================================*/

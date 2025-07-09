@@ -5,8 +5,6 @@ import io.gatling.http.Predef._
 
 object Logout {
 
-  val xuiUrl = "https://manage-case.#{env}.platform.hmcts.net"
-
   /*====================================================================================
   * Manage Case Logout
   *===================================================================================*/
