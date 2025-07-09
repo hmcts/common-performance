@@ -9,15 +9,24 @@ object Login {
   val xuiUrl = "https://manage-case.#{env}.platform.hmcts.net"
 
   /*====================================================================================
-  *Manage Case Login
+  * Manage Case Login
   *===================================================================================*/
 
-  val XUILogin =
+  def authenticate(email: String, password: String) = {
 
-    group("XUI_Login_LoginRequest") {
-      exec(http("XUI_020_005_Login")
+    exec { session =>
+      val resolvedEmail =
+        /* If the email value passed through is a gatling session reference e.g. "#{username}" then strip out the #{} and
+        retrieve the value of the variable from the session */
+        if (email.matches("""#\{.+}""")) session(email.substring(2, email.length - 1)).as[String]
+        else email
+      session.set("resolvedEmail", resolvedEmail)
+    }
+
+    .group("XUI_Login") {
+      exec(http("XUI_Login_LoginRequest")
         .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + xuiUrl + "/oauth2/callback&state=#{state}&nonce=#{nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user%20search-user&prompt=")
-        .formParam("username", "#{user}")
+        .formParam("username", "#{email}")
         .formParam("password", "#{password}")
         .formParam("azureLoginEnabled", "true")
         .formParam("mojLoginEnabled", "true")
@@ -108,7 +117,4 @@ object Login {
         .body(StringBody("""{"size":25}"""))
         .check(substring("columns")))
     }
-
-    .pause(7)
-
 }

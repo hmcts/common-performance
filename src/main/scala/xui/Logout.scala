@@ -13,10 +13,9 @@ object Logout {
 
   val XUILogout =
 
-    group("XUI_999_Logout") {
-      exec(http("XUI_999_005_Logout")
+    group("XUI_Logout") {
+      exec(http("XUI_Logout_LogoutRequest")
         .get(xuiUrl + "/auth/logout")
         .headers(Headers.navigationHeader))
     }
-
 }
