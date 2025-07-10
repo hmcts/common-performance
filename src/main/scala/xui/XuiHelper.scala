@@ -145,6 +145,8 @@ object XuiHelper {
         .header("accept", "application/json")
         .check(substring("id")))
 
+      .exec(getCookieValue(CookieKey("XSRF-TOKEN").withDomain(xuiUrl.replace("https://", "")).withSecure(true).saveAs("XSRFToken")))
+
       .exec(http("XUI_Login_OrgDetails")
         .get(xuiUrl + "/api/organisation")
         .headers(Headers.commonHeader)
