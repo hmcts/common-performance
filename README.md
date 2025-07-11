@@ -20,6 +20,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - [CCD Helper](#-ccd-helper)
   - [Create a Case](#-create-a-case)
   - [Add a Case Event](#-add-a-case-event)
+  - [Assign a Case](#-assign-a-case)
   - [CDAM Document Upload](#-cdam-document-upload)
   - [Authentication](#-authentication)
   - [Case Type Definitions](#-case-type-definitions)
@@ -264,6 +265,32 @@ CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, pay
 
 Ensure the payload JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs. 
 Where necessary, the event JSON should make use of the `eventToken` in the Gatling session, which is generated before the event is created. 
+
+### 👤 Assign a Case
+
+Authenticates and assigns a case to a user.
+
+```scala
+CcdHelper.assignCase(userEmail, userPassword, caseType, payloadPath)
+```
+
+**Parameters:**
+- `userEmail` – user to authenticate as
+- `userPassword` – password for the user
+- `caseType` – predefined CcdCaseType (e.g. CcdCaseTypes.PROBATE_GrantOfRepresentation)
+- `payloadPath` – path to the JSON file body used for case assignment
+
+**Example:**
+```scala
+.exec(CcdHelper.assignCase(
+  userEmail = "#{user}", //you could use this in conjunction with a file feeder
+  userPassword = "#{password}",
+  caseType = CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
+  payloadPath = "assign-case-payload.json"
+))
+```
+
+Ensure the payload JSON is placed in the `resources` directory or a subfolder.
 
 ### 📤 CDAM Document Upload
 
