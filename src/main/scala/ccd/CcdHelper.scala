@@ -2,6 +2,7 @@ package ccd
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.http.check.HttpCheck
 import utilities.AzureKeyVault
 
 object CcdHelper {
@@ -60,7 +61,7 @@ object CcdHelper {
 
   }
 
-  def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String) =
+  def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
@@ -80,9 +81,10 @@ object CcdHelper {
       .body(ElFileBody(payloadPath))
       .check(jsonPath("$.case_type_id").is(caseType.caseTypeId))
       .check(jsonPath("$.id").saveAs("caseId"))
+      .check(additionalChecks: _*)
     )
 
-  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, eventName: String, payloadPath: String) =
+  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, eventName: String, payloadPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
@@ -101,9 +103,22 @@ object CcdHelper {
       .header("Content-Type", "application/json")
       .body(ElFileBody(payloadPath))
       .check(jsonPath("$.id"))
+      .check(additionalChecks: _*)
     )
 
-  def uploadDocumentToCdam(userEmail: String, userPassword: String, caseType: CcdCaseType, filepath: String) =
+  def assignCase(userEmail: String, userPassword: String, caseType: CcdCaseType, payloadPath: String) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+      .exec(http("CCD_AssignCase")
+        .post(ccdAPIURL + "/case-users")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .body(ElFileBody(payloadPath))
+        .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
+
+  def uploadDocumentToCdam(userEmail: String, userPassword: String, caseType: CcdCaseType, filepath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
@@ -121,18 +136,7 @@ object CcdHelper {
         .fileName("#{filename}")
         .transferEncoding("binary"))
       .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("docId"))
-      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken")))
-
-  def assignCase(userEmail: String, userPassword: String, caseType: CcdCaseType, payloadPath: String) =
-
-    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
-
-    .exec(http("CCD_AssignCase")
-      .post(ccdAPIURL + "/case-users")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .body(ElFileBody(payloadPath))
-      .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
+      .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken"))
+      .check(additionalChecks: _*))
 
 }
