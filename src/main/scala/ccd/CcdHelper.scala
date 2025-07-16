@@ -103,6 +103,18 @@ object CcdHelper {
       .check(jsonPath("$.id"))
     )
 
+  def assignCase(userEmail: String, userPassword: String, caseType: CcdCaseType, payloadPath: String) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+      .exec(http("CCD_AssignCase")
+        .post(ccdAPIURL + "/case-users")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .body(ElFileBody(payloadPath))
+        .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
+
   def uploadDocumentToCdam(userEmail: String, userPassword: String, caseType: CcdCaseType, filepath: String) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
@@ -122,17 +134,5 @@ object CcdHelper {
         .transferEncoding("binary"))
       .check(regex("""documents/([0-9a-z-]+?)/binary""").saveAs("docId"))
       .check(jsonPath("$.documents[0].hashToken").saveAs("hashToken")))
-
-  def assignCase(userEmail: String, userPassword: String, caseType: CcdCaseType, payloadPath: String) =
-
-    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
-
-    .exec(http("CCD_AssignCase")
-      .post(ccdAPIURL + "/case-users")
-      .header("Authorization", "Bearer #{bearerToken}")
-      .header("ServiceAuthorization", "#{authToken}")
-      .header("Content-Type", "application/json")
-      .body(ElFileBody(payloadPath))
-      .check(jsonPath("$.status_message").is("Case-User-Role assignments created successfully")))
 
 }
