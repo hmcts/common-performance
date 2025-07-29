@@ -269,7 +269,7 @@ CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, pay
   caseType = CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
   caseId = "#{caseId}",
   eventName = "submitEvent",
-  payloadPath = "submit-event-payload.json"
+  payloadPath = "submit-event-payload.json",
   additionalChecks = Seq(
     jsonPath("$.state").equals("SUBMITTED")
   )
@@ -323,7 +323,7 @@ uploadDocumentToCdam(userEmail, userPassword, caseType, filepath)
   userEmail = "#{user}", //you could use this in conjunction with a file feeder
   userPassword = "#{password}",
   caseType = CcdCaseTypes.PROBATE_GrantOfRepresentation, //a collection of case types are defined in CcdCaseType.scala
-  filepath = "documents/TestDocument.pdf"
+  filepath = "documents/TestDocument.pdf",
   additionalChecks = Seq(
     jsonPath("$.documentName").saveAs("docName")
   )
