@@ -10,6 +10,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - 📈 Jenkins Stats Generator
 - 🔐 Azure Key Vault Integration
 - 📅 Date Utils
+- 🔤 String Utils
 
 ---
 
@@ -34,6 +35,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - [Utilities](#-utilities)
     - [Azure Key Vault Integration](#-azure-key-vault-integration)
     - [DateUtils](#-dateutils)
+    - [StringUtils](#-stringutils)
 - [Running Tests](#-running-tests)
 - [Updating common-performance](#-updating-common-performance)
 
@@ -714,6 +716,36 @@ In a Gatling scenario, you could use the feature as follows:
 - **Using with Gatling:**  
   If you use a simple val assignment, such as `val dob = DateUtils.getDatePastRandom()`,
   the method is only called once at runtime, so every virtual user would have the same value for "dob".
+  Using `.set()` or `.setAll()` will ensure each user will call the method to retrieve a value on-demand
+  and save it into the Gatling session.
+
+---
+
+## 🔤 StringUtils
+
+A simple Scala utility to generate strings.  
+Supports generating:
+- a random string of a given length
+
+---
+
+## 💡 Usage Examples
+
+```scala
+// Get a five-character random string
+StringUtils.randomString(5)
+```
+In a Gatling scenario, you could use the feature as follows:
+```scala
+.exec(_.set("name", "test" + StringUtils.randomString(5)))
+```
+---
+
+## 📋 Notes
+
+- **Using with Gatling:**  
+  If you use a simple val assignment, such as `val name = StringUtils.randomString(10)`,
+  the method is only called once at runtime, so every virtual user would have the same value for "name".
   Using `.set()` or `.setAll()` will ensure each user will call the method to retrieve a value on-demand
   and save it into the Gatling session.
 
