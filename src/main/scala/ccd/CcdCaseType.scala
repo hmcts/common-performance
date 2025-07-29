@@ -91,7 +91,7 @@ object CcdCaseTypes {
     name = "PROBATE_GrantOfRepresentation",
     jurisdictionId = "PROBATE",
     caseTypeId = "GrantOfRepresentation",
-    microservice = "ccd_data"
+    microservice = "probate_backend"
   )
 
   val PUBLICLAW_CARE_SUPERVISION_EPO = CcdCaseType(
