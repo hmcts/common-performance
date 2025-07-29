@@ -42,6 +42,16 @@ object DateUtils {
     LocalDate.now().plusYears(years).plusMonths(months).plusDays(days).format(formatter(format))
   }
 
+  def getRandomDayOfMonth(pad: Boolean = true): String = {
+    val day = randomBetween(1, 28)
+    if (pad) f"$day%02d" else day.toString
+  }
+
+  def getRandomMonthOfYear(pad: Boolean = true): String = {
+    val month = randomBetween(1, 12)
+    if (pad) f"$month%02d" else month.toString
+  }
+
   /** Helper method to generate random value between min and max (inclusive) */
   private def randomBetween(min: Int, max: Int): Int =
     if (min == max) min else Random.between(min, max + 1)

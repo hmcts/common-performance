@@ -654,8 +654,10 @@ Supports generating:
 - the current date
 - past dates (fixed or randomised)
 - future dates (fixed or randomised)
+- random day of the month or month of the year (padded or un-padded)
 
-All dates are returned in a user-specified format using `java.time.format.DateTimeFormatter`.
+All dates are returned in a user-specified format using `java.time.format.DateTimeFormatter`, except `getRandomDayOfMonth` and `getRandomMonthOfYear` 
+which simply return a one or two character string e.g. `4` or `04`, depending on whether padding is requested.
 
 ---
 
@@ -667,6 +669,7 @@ All dates are returned in a user-specified format using `java.time.format.DateTi
 - Get a future date by adding fixed years, months, days.
 - Get a random future date by specifying ranges for years, months, and days.
 - Arguments in random functions are **optional** — you only need to provide the ones you want to randomise (years, months, or days).
+- Get a random day of the month or random month of the year (padded or un-padded).
 
 ---
 
@@ -690,6 +693,12 @@ DateUtils.getDateFuture("dd/MM/yyyy", years = 1, months = 2, days = 15)
 
 // Get a random future date: 5-20 years in future
 DateUtils.getDateFutureRandom("dd/MM/yyyy", minYears = 5, maxYears = 20)
+
+// Get a random day of the month (01-28, padded to two characters e.g. 04)
+DateUtils.getRandomDayOfMonth()
+
+// Get a random month of the year (1-12, un-padded e.g. 8)
+DateUtils.getRandomMonthOfYear(pad = false)
 ```
 In a Gatling scenario, you could use the feature as follows:
 ```scala
