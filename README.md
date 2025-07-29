@@ -6,10 +6,12 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 
 **Current Features:**
 - 📂 CCD Helper
+- 🧩 XUI Helper
 - 📡 ElasticSearch Feeder
 - 📈 Jenkins Stats Generator
 - 🔐 Azure Key Vault Integration
 - 📅 Date Utils
+- 🔤 String Utils
 
 ---
 
@@ -24,6 +26,9 @@ This repository is intended to be imported into Gatling projects as a **Git subm
   - [CDAM Document Upload](#-cdam-document-upload)
   - [Authentication](#-authentication)
   - [Case Type Definitions](#-case-type-definitions)
+- [XUI Helper](#-xui-helper)
+  - [Homepage / Login / Logout](#-homepage--login--logout)
+  - [Headers](#-headers)
 - [ElasticSearch Feeder](#-elasticsearch-feeder)
     - [Usage in Simulation](#-usage-in-simulation)
     - [Config Overrides](#-config-overrides)
@@ -34,6 +39,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - [Utilities](#-utilities)
     - [Azure Key Vault Integration](#-azure-key-vault-integration)
     - [DateUtils](#-dateutils)
+    - [StringUtils](#-stringutils)
 - [Running Tests](#-running-tests)
 - [Updating common-performance](#-updating-common-performance)
 
@@ -385,6 +391,71 @@ Each case type includes:
 
 ---
 
+# 🧩 XUI Helper
+
+## 📄 Overview
+
+A helper utility to reference common XUI Gatling HTTP requests and headers 
+
+---
+
+## 🪄 Features
+- Common XUI Gatling requests such as Homepage, Login and Logout
+- Common HTTP headers used in XUI Gatling requests
+
+This utility supports performance test scenarios that need to make use of generic XUI HTTP requests, 
+such as loading the homepage, logging in and logging out.
+---
+
+## 🧪 Usage
+
+Import the package into your Gatling scenario:
+
+```scala
+import xui._
+```
+
+### 🏠 Homepage / Login / Logout
+
+Gatling requests for loading the XUI homepage, logging in and logging out
+
+```scala
+XuiHelper.Homepage
+
+XuiHelper.Login(email, password)
+
+XuiHelper.Logout
+```
+**Parameters:**
+- `email` – user to authenticate as
+- `password` – password for the user
+
+**Example:**
+```scala
+.exec(XuiHelper.Homepage)
+.exec(XuiHelper.Login(
+  "#{email}", //you could use this in conjunction with a file feeder
+  "#{password}"
+))
+.exec(XuiHelper.Logout)
+```
+
+### 📑 Headers
+
+Scala mappings for common XUI HTTP headers used in Gatling requests
+
+```scala
+.exec(http("XUI_010_005_CreateCase")
+  .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+  .headers(Headers.commonHeader))
+```
+
+> 📢 **Note:** it is possible to use multiple headers in a single Gatling request
+>
+> e.g. `.headers(Headers.commonHeader).headers(Headers.postHeader)`
+
+---
+
 # 📡 ElasticSearch Feeder
 
 A flexible feeder allowing Gatling scenarios to pull dynamic data from ElasticSearch.
@@ -714,6 +785,36 @@ In a Gatling scenario, you could use the feature as follows:
 - **Using with Gatling:**  
   If you use a simple val assignment, such as `val dob = DateUtils.getDatePastRandom()`,
   the method is only called once at runtime, so every virtual user would have the same value for "dob".
+  Using `.set()` or `.setAll()` will ensure each user will call the method to retrieve a value on-demand
+  and save it into the Gatling session.
+
+---
+
+## 🔤 StringUtils
+
+A simple Scala utility to generate strings.  
+Supports generating:
+- a random string of a given length
+
+---
+
+## 💡 Usage Examples
+
+```scala
+// Get a five-character random string
+StringUtils.randomString(5)
+```
+In a Gatling scenario, you could use the feature as follows:
+```scala
+.exec(_.set("name", "test" + StringUtils.randomString(5)))
+```
+---
+
+## 📋 Notes
+
+- **Using with Gatling:**  
+  If you use a simple val assignment, such as `val name = StringUtils.randomString(10)`,
+  the method is only called once at runtime, so every virtual user would have the same value for "name".
   Using `.set()` or `.setAll()` will ensure each user will call the method to retrieve a value on-demand
   and save it into the Gatling session.
 
