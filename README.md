@@ -12,6 +12,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - 🔐 Azure Key Vault Integration
 - 📅 Date Utils
 - 🔤 String Utils
+- 📫 Postcode Reference File
 
 ---
 
@@ -40,6 +41,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
     - [Azure Key Vault Integration](#-azure-key-vault-integration)
     - [DateUtils](#-dateutils)
     - [StringUtils](#-stringutils)
+- [Postcode Reference File](#-postcode-reference-file)
 - [Running Tests](#-running-tests)
 - [Updating common-performance](#-updating-common-performance)
 
@@ -817,6 +819,23 @@ In a Gatling scenario, you could use the feature as follows:
   the method is only called once at runtime, so every virtual user would have the same value for "name".
   Using `.set()` or `.setAll()` will ensure each user will call the method to retrieve a value on-demand
   and save it into the Gatling session.
+
+---
+
+# 📫 Postcode Reference File
+
+A CSV file populated with valid postcodes
+
+## 💡 Usage Examples
+
+In a Gatling scenario, you could create a postcode feeder as follows:
+```scala
+val postcodeFeeder = csv("postcodes.csv").random
+```
+Since the common-performance submodule is in the Gatling repo's classpath, it is shared automatically through the dependency setup.
+You cannot reference it using `common/common-performance/../postcodes.csv`.
+
+> 📢 **Note:** Ensure there is not a postcodes.csv file in the Gatling repo's `resources` folder that could cause a clash.
 
 ---
 
