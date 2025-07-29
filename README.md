@@ -6,6 +6,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 
 **Current Features:**
 - 📂 CCD Helper
+- 🧩 XUI Helper
 - 📡 ElasticSearch Feeder
 - 📈 Jenkins Stats Generator
 - 🔐 Azure Key Vault Integration
@@ -25,6 +26,9 @@ This repository is intended to be imported into Gatling projects as a **Git subm
   - [CDAM Document Upload](#-cdam-document-upload)
   - [Authentication](#-authentication)
   - [Case Type Definitions](#-case-type-definitions)
+- [XUI Helper](#-xui-helper)
+  - [Homepage / Login / Logout](#-homepage--login--logout)
+  - [Headers](#-headers)
 - [ElasticSearch Feeder](#-elasticsearch-feeder)
     - [Usage in Simulation](#-usage-in-simulation)
     - [Config Overrides](#-config-overrides)
@@ -384,6 +388,71 @@ Each case type includes:
 - caseTypeId
 - microservice
 - optional clientId (defaults to ccd_gateway)
+
+---
+
+# 🧩 XUI Helper
+
+## 📄 Overview
+
+A helper utility to reference common XUI Gatling HTTP requests and headers 
+
+---
+
+## 🪄 Features
+- Common XUI Gatling requests such as Homepage, Login and Logout
+- Common HTTP headers used in XUI Gatling requests
+
+This utility supports performance test scenarios that need to make use of generic XUI HTTP requests, 
+such as loading the homepage, logging in and logging out.
+---
+
+## 🧪 Usage
+
+Import the package into your Gatling scenario:
+
+```scala
+import xui._
+```
+
+### 🏠 Homepage / Login / Logout
+
+Gatling requests for loading the XUI homepage, logging in and logging out
+
+```scala
+XuiHelper.Homepage
+
+XuiHelper.Login(email, password)
+
+XuiHelper.Logout
+```
+**Parameters:**
+- `email` – user to authenticate as
+- `password` – password for the user
+
+**Example:**
+```scala
+.exec(XuiHelper.Homepage)
+.exec(XuiHelper.Login(
+  "#{email}", //you could use this in conjunction with a file feeder
+  "#{password}"
+))
+.exec(XuiHelper.Logout)
+```
+
+### 📑 Headers
+
+Scala mappings for common XUI HTTP headers used in Gatling requests
+
+```scala
+.exec(http("XUI_010_005_CreateCase")
+  .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+  .headers(Headers.commonHeader))
+```
+
+> 📢 **Note:** it is possible to use multiple headers in a single Gatling request
+>
+> e.g. `.headers(Headers.commonHeader).headers(Headers.postHeader)`
 
 ---
 
