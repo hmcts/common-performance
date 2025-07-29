@@ -121,7 +121,7 @@ Update the Scala version in to at least `2.13.11` to support all the features in
 
 ```groovy
 gatling {
-    scalaVersion '2.13.11'
+    scalaVersion = '2.13.11'
 }
 ```
 
