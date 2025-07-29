@@ -137,6 +137,11 @@ afterAlways('checkout') {
 
 ---
 
+The first time you add the submodule to the project, run the following to populate the submodule folder:
+```bash
+git submodule update --init --recursive
+```
+
 To pull the latest submodule code at any time, run:
 ```bash
 git submodule update --recursive --remote
