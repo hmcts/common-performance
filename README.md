@@ -158,7 +158,7 @@ git submodule update --recursive --remote
 After adding or updating a submodule, always run:
 
 ```bash
-./gradlew clean build
+./gradlew build
 ```
 
 to ensure the changes are picked up.
@@ -874,7 +874,7 @@ If updates are needed:
 5. **Rebuild your project**:
 
    ```bash
-   ./gradlew clean build
+   ./gradlew build
    ```
 6. **Run the dependency check** to identify CVEs that might need suppressing
    (use `--no-configuration-cache` because the OWASP Dependency Check is not fully compatible with configuration cache):
