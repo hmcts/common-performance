@@ -108,4 +108,11 @@ object CcdCaseTypes {
     microservice = "ccd_data"
   )
 
+  val ST_CIC_CriminalInjuriesCompensation = CcdCaseType(
+    name = "ST_CIC_CriminalInjuriesCompensation",
+    jurisdictionId = "ST_CIC",
+    caseTypeId = "CriminalInjuriesCompensation",
+    microservice = "ccd_data"
+  )
+
 }
