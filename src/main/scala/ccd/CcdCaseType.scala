@@ -115,4 +115,11 @@ object CcdCaseTypes {
     microservice = "ccd_data"
   )
 
+  val WA_WaCaseType = CcdCaseType(
+    name = "WA_WaCaseType",
+    jurisdictionId = "WA",
+    caseTypeId = "WaCaseType",
+    microservice = "ccd_data"
+  )
+
 }
