@@ -5,19 +5,18 @@
     <suppress>
         <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.4</packageUrl>
         <cve>CVE-2025-1686</cve>
-        <cve>CVE-2022-37767</cve>
     </suppress>
 
     <!-- azure-identity -->
     <suppress>
-        <packageUrl>pkg:maven/com.azure/azure-identity@1.16.1</packageUrl>
+        <packageUrl>pkg:maven/com.azure/azure-identity@1.18.0</packageUrl>
         <cve>CVE-2023-36415</cve>
         <cve>CVE-2024-35255</cve>
     </suppress>
 
     <!-- msal4j -->
     <suppress>
-        <packageUrl>pkg:maven/com.microsoft.azure/msal4j@1.20.1</packageUrl>
+        <packageUrl>pkg:maven/com.microsoft.azure/msal4j@1.23.1</packageUrl>
         <cve>CVE-2024-35255</cve>
     </suppress>
 
@@ -27,10 +26,16 @@
         <cve>CVE-2023-46122</cve>
     </suppress>
 
-    <!-- apache -->
+    <!-- jline -->
     <suppress>
-        <packageUrl>pkg:maven/xerces/xercesImpl@2.12.2</packageUrl>
-        <cve>CVE-2017-10355</cve>
+        <packageUrl>pkg:maven/org.scala-sbt.jline/jline@2.14.7-sbt-9c3b6aca11c57e339441442bbf58e550cdfecb79</packageUrl>
+        <cve>CVE-2023-50572</cve>
+    </suppress>
+
+    <!-- sbinary -->
+    <suppress>
+        <packageUrl>pkg:maven/org.scala-sbt/sbinary_2.13@0.5.1</packageUrl>
+        <cve>CVE-2023-46122</cve>
     </suppress>
 
 </suppressions>
