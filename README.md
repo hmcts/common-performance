@@ -219,13 +219,66 @@ Import the package into your Gatling scenario:
 ```scala
 import ccd._
 ```
+### 🔍 Search Cases
+
+Authenticates and searches for CCD cases using the specified query.
+
+```scala
+CcdHelper.searchCases(userEmail, userPassword, caseType, queryPath[, additionalChecks])
+```
+**Parameters:**
+- `userEmail` – user to authenticate as
+- `userPassword` – password for the user
+- `caseType` – predefined CcdCaseType (e.g. CcdCaseTypes.PROBATE_GrantOfRepresentation)
+- `queryPath` – path to the JSON file containing a valid search query (in ElasticSearch format)
+- `additionalChecks` - an optional list of additional checks to perform on the request, such as fields to save
+
+**Example:**
+```scala
+.exec(CcdHelper.searchCases(
+  "#{user}", //you could use this in conjunction with a file feeder
+  "#{password}",
+  CcdCaseTypes.IA_Asylum, //a collection of case types are defined in CcdCaseType.scala
+  "search-cases-query.json",
+  additionalChecks = Seq(
+    jsonPath("$.cases[0].id").saveAs("caseId"),
+    jsonPath("$.cases[0].state").saveAs("caseState")
+  )
+))
+```
+**Example Query:**
+```json
+{
+    "_source": [
+        "reference",
+        "data.appealReferenceNumber"
+    ],
+    "query":{
+      "bool":{
+         "filter":{
+            "term":{
+               "data.appealReferenceNumber.keyword":"#{appealRef}"
+            }
+         }
+      }
+   }
+}
+```
+
+**Outputs:**
+
+- None by default, the request only checks at least one result was returned. Any additional checks should be added 
+to the request using `additionalChecks`
+
+Ensure the query JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs (in this case
+a valid ElasticSearch query). A `_source` object should be defined in the query wherever possible to return only fields required.
 
 ### 🏛 Create a Case
 
 Authenticates and creates a case using the specified event and request body.
 
 ```scala
-CcdHelper.createCase(userEmail, userPassword, caseType, eventName, payloadPath)
+CcdHelper.createCase(userEmail, userPassword, caseType, eventName, payloadPath[, additionalChecks])
 ```
 **Parameters:**
 - `userEmail` – user to authenticate as
@@ -262,7 +315,7 @@ Where necessary, the event JSON should make use of the `eventToken` in the Gatli
 Authenticates and adds an event to an existing case.
 
 ```scala
-CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, payloadPath)
+CcdHelper.addCaseEvent(userEmail, userPassword, caseType, caseId, eventName, payloadPath[, additionalChecks])
 ```
 
 **Parameters:**
@@ -318,7 +371,7 @@ Ensure the payload JSON is placed in the `resources` directory or a subfolder.
 Authenticates and uploads a document to dm-store via CDAM.
 
 ```scala
-uploadDocumentToCdam(userEmail, userPassword, caseType, filepath)
+uploadDocumentToCdam(userEmail, userPassword, caseType, filepath[, additionalChecks])
 ```
 
 **Parameters:**

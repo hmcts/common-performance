@@ -61,6 +61,20 @@ object CcdHelper {
 
   }
 
+  def searchCases(userEmail: String, userPassword: String, caseType: CcdCaseType, queryPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+    .exec(http("CCD_SearchCases")
+      .post(ccdAPIURL + s"searchCases?ctid=${caseType.caseTypeId}")
+      .header("Authorization", "Bearer #{bearerToken}")
+      .header("ServiceAuthorization", "#{authToken}")
+      .header("Content-Type", "application/json")
+      .body(ElFileBody(queryPath))
+      .check(jsonPath("$.total").ofType[Int].gt(0))
+      .check(additionalChecks: _*)
+    )
+
   def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
