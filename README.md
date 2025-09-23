@@ -21,6 +21,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 - [About Git Submodules](#-about-git-submodules)
 - [Setup Instructions](#-setup-instructions)
 - [CCD Helper](#-ccd-helper)
+  - [Search Cases](#-search-cases)
   - [Create a Case](#-create-a-case)
   - [Add a Case Event](#-add-a-case-event)
   - [Assign a Case](#-assign-a-case)
