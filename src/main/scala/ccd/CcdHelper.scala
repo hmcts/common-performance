@@ -66,7 +66,7 @@ object CcdHelper {
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
     .exec(http("CCD_SearchCases")
-      .post(ccdAPIURL + s"searchCases?ctid=${caseType.caseTypeId}")
+      .post(ccdAPIURL + s"/searchCases?ctid=${caseType.caseTypeId}")
       .header("Authorization", "Bearer #{bearerToken}")
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
