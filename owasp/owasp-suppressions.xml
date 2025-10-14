@@ -38,4 +38,21 @@
         <cve>CVE-2023-46122</cve>
     </suppress>
 
+    <!-- gatling -->
+    <suppress>
+        <packageUrl>pkg:maven/io.gatling/gatling-shared-cli@0.0.6</packageUrl>
+        <cve>CVE-2025-51306</cve>
+        <cve>CVE-2025-51308</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/io.gatling/gatling-shared-model_2.13@0.1.1</packageUrl>
+        <cve>CVE-2025-51306</cve>
+        <cve>CVE-2025-51308</cve>
+    </suppress>
+    <suppress>
+        <packageUrl>pkg:maven/io.gatling/gatling-shared-util_2.13@0.0.12</packageUrl>
+        <cve>CVE-2025-51306</cve>
+        <cve>CVE-2025-51308</cve>
+    </suppress>
+
 </suppressions>
