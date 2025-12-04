@@ -134,7 +134,7 @@ gatling {
 }
 ```
 
-### 4. `Jenkins_nightly`
+### 4. `Jenkinsfile_nightly`
 
 Initialise the submodule when cloned by Jenkins by adding the following before the 
 call to `enablePerformanceTest()`:
@@ -716,13 +716,14 @@ will need to run to generate the summary stats and Gatling report for Jenkins.
 
 ## 🔐 **Azure Key Vault Integration**
 
-A utility to securely retrieve secrets (such as client secrets) directly from **Azure Key Vault** using either environment variables or Azure authentication methods.
+A utility to securely retrieve secrets (such as client secrets) directly from **Azure Key Vault** using either environment variables or Azure authentication methods. 
+This removes the need for an `application.conf` file holding the necessary secrets.
 
 ---
 
 ### 🧬 How It Works
 
-- If `CLIENT_SECRET` is set as an environment variable (often set in the Jenkins_nightly file), it will be used.
+- If the required client secret e.g.`CLIENT_SECRET` is set as an environment variable (often set in the Jenkinsfile_nightly file), it will be used.
 - Otherwise, the secret is retrieved from Azure Key Vault using:
   - **Azure CLI authentication** (`az login`) when running locally or on a VM.
   - **Managed Identity / DefaultAzureCredential** when running in Jenkins or cloud environments.
@@ -739,11 +740,13 @@ Authenticate locally or on a VM and retrieve the required secrets in Gatling:
    ```
 
 2. Add the following lines to your Gatling scenario, to fetch the secret from Key Vault 
-based on the vault and secret name passed to the shared function:  
+based on the vault and secret name passed to the shared function. The third argument used is to reference the 
+Jenkins Environment Variable name defined in the Jenkinsfile_nightly file (optional, defaults to `CLIENT_SECRET`), 
+which will be required if the simulation is setup for use in Jenkins:
    ```scala
    import utilities.AzureKeyVault
    
-   val clientSecret = AzureKeyVault.loadClientSecret("ccd-perftest", "ccd-api-gateway-oauth2-client-secret")  
+   val clientSecret = AzureKeyVault.loadClientSecret("ccd-perftest", "ccd-api-gateway-oauth2-client-secret", "CCD_CLIENT_SECRET")  
    ```
 
 3. Pass the client secret as a form parameter in any request as usual:

@@ -25,9 +25,12 @@ object CcdHelper {
       session.set("resolvedEmail", resolvedEmail)
     }
 
-    /* If the current user is not already authenticated, do so now.
-    Otherwise it will re-use the existing tokens stored in the Gatling session */
-    .doIf(session => !session.contains("authenticatedCcdUser") || session("authenticatedCcdUser").as[String] != session("resolvedEmail").as[String]) {
+    /* If the current user is not already authenticated against the provided clientId, do so now.
+    Otherwise it will re-use the existing tokens stored in the Gatling session*/
+    .doIf(session => !session.contains("authenticatedCcdUser") ||
+      !session.contains("authenticatedClientId") ||
+      session("authenticatedCcdUser").as[String] != session("resolvedEmail").as[String] ||
+      session("authenticatedClientId").as[String] != clientId) {
 
       exec(http("CCD_AuthLease")
         .post(rpeAPIURL + "/testing-support/lease")
@@ -53,9 +56,12 @@ object CcdHelper {
         .check(jsonPath("$.id").saveAs("idamId"))
       )
 
-      //set the email address of the authenticated user in the session so the tokens can be re-used for subsequent calls
+      //set the email address of the authenticated user and the clientId in the session so the tokens can be re-used for subsequent calls
       .exec {
-        session => session.set("authenticatedCcdUser", session("resolvedEmail").as[String])
+        session => session.setAll(
+          "authenticatedCcdUser" -> session("resolvedEmail").as[String],
+          "authenticatedClientId" -> clientId
+        )
       }
     }
 
