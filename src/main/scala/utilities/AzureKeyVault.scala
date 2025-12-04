@@ -13,13 +13,13 @@ object AzureKeyVault {
    * Resolve the client secret by first checking the environment.
    * If not found, fetch it from Azure Key Vault using the provided vault and secret name.
    */
-  def loadClientSecret(vaultName: String, secretName: String): String = {
-    sys.env.get("CLIENT_SECRET") match {
+  def loadClientSecret(vaultName: String, secretName: String, jenkinsEnvVar: String = "CLIENT_SECRET"): String = {
+    sys.env.get(jenkinsEnvVar) match {
       case Some(secret) =>
-        println("CLIENT_SECRET loaded from environment")
+        println(s"$jenkinsEnvVar loaded from environment")
         secret
       case None =>
-        println(s"CLIENT_SECRET not found in environment, fetching from Azure Key Vault: $vaultName / $secretName")
+        println(s"$jenkinsEnvVar not found in environment, fetching from Azure Key Vault: $vaultName / $secretName")
         getSecretFromKeyVault(vaultName, secretName)
     }
   }
