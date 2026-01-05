@@ -55,4 +55,10 @@
         <cve>CVE-2025-51308</cve>
     </suppress>
 
+    <!-- netty -->
+    <suppress>
+        <packageUrl>pkg:maven/io.netty/netty-buffer@4.2.6.Final</packageUrl>
+        <cve>CVE-2025-67735</cve>
+    </suppress>
+
 </suppressions>
