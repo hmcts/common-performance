@@ -57,7 +57,7 @@
 
     <!-- netty -->
     <suppress>
-        <packageUrl>pkg:maven/io.netty/*</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.netty/.*$</packageUrl>
         <cve>CVE-2025-67735</cve>
     </suppress>
 
