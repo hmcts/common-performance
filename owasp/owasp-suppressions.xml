@@ -57,7 +57,7 @@
 
     <!-- netty -->
     <suppress>
-        <packageUrl>pkg:maven/io.netty/netty-buffer@4.2.6.Final</packageUrl>
+        <packageUrl>pkg:maven/io.netty/*</packageUrl>
         <cve>CVE-2025-67735</cve>
     </suppress>
 
