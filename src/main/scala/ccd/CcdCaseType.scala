@@ -70,7 +70,7 @@ object CcdCaseTypes {
     name = "IA_Asylum",
     jurisdictionId = "IA",
     caseTypeId = "Asylum",
-    microservice = "ccd_data"
+    microservice = "ia"
   )
 
   val IA_Bail = CcdCaseType(
