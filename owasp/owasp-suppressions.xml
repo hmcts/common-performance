@@ -40,17 +40,17 @@
 
     <!-- gatling -->
     <suppress>
-        <packageUrl>pkg:maven/io.gatling/gatling-shared-cli@0.0.6</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-cli@.*$</packageUrl>
         <cve>CVE-2025-51306</cve>
         <cve>CVE-2025-51308</cve>
     </suppress>
     <suppress>
-        <packageUrl>pkg:maven/io.gatling/gatling-shared-model_2.13@0.1.1</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-model_2\.13@.*$</packageUrl>
         <cve>CVE-2025-51306</cve>
         <cve>CVE-2025-51308</cve>
     </suppress>
     <suppress>
-        <packageUrl>pkg:maven/io.gatling/gatling-shared-util_2.13@0.0.12</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-util_2\.13@.*$</packageUrl>
         <cve>CVE-2025-51306</cve>
         <cve>CVE-2025-51308</cve>
     </suppress>
@@ -59,6 +59,17 @@
     <suppress>
         <packageUrl regex="true">^pkg:maven/io\.netty/.*$</packageUrl>
         <cve>CVE-2025-67735</cve>
+    </suppress>
+
+    <!-- log4j -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-api@.*$</packageUrl>
+        <cve>CVE-2025-68161</cve>
+    </suppress>
+
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-core@.*$</packageUrl>
+        <cve>CVE-2025-68161</cve>
     </suppress>
 
 </suppressions>
