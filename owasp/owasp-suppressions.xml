@@ -3,7 +3,7 @@
 
     <!-- pebble -->
     <suppress>
-        <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.4</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.pebbletemplates/pebble@.*$</packageUrl>
         <cve>CVE-2025-1686</cve>
     </suppress>
 
