@@ -9,7 +9,7 @@
 
     <!-- azure-identity -->
     <suppress>
-        <packageUrl>pkg:maven/com.azure/azure-identity@1.18.0</packageUrl>
+        <packageUrl regex="true">^pkg:maven/com\.azure/azure-identity@.*$</packageUrl>
         <cve>CVE-2023-36415</cve>
         <cve>CVE-2024-35255</cve>
     </suppress>
