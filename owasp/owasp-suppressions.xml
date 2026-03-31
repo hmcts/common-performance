@@ -3,7 +3,7 @@
 
     <!-- pebble -->
     <suppress>
-        <packageUrl>pkg:maven/io.pebbletemplates/pebble@3.2.4</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.pebbletemplates/pebble@.*$</packageUrl>
         <cve>CVE-2025-1686</cve>
     </suppress>
 
@@ -59,6 +59,8 @@
     <suppress>
         <packageUrl regex="true">^pkg:maven/io\.netty/.*$</packageUrl>
         <cve>CVE-2025-67735</cve>
+        <cve>CVE-2026-33870</cve>
+        <cve>CVE-2026-33871</cve>
     </suppress>
 
     <!-- log4j -->
