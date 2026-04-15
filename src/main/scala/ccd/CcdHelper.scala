@@ -114,6 +114,7 @@ object CcdHelper {
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
       .check(jsonPath("$.token").saveAs("eventToken"))
+      .check(additionalChecks: _*)
     )
 
     .exec(http(s"CCD_SubmitEvent_${eventName}")
