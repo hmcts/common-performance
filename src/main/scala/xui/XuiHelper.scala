@@ -63,7 +63,8 @@ object XuiHelper {
         .headers(Headers.navigationHeader)
         .check(css("input[name='_csrf']", "value").saveAs("csrf"))
         .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
-        .check(regex("nonce=(.*)&amp;response_type").saveAs("nonce")))
+        .check(regex("nonce=(.*)&amp;response_type").saveAs("nonce"))
+        .check(regex("code_challenge=(.*)&amp;code_challenge_method").saveAs("code_challenge")))
 
       .exitHereIfFailed
     }
@@ -82,7 +83,7 @@ object XuiHelper {
 
     group("XUI_000_Login") {
       exec(http("XUI_Login_LoginRequest")
-        .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + xuiUrl + "/oauth2/callback&state=#{state}&nonce=#{nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user%20search-user&prompt=")
+        .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + xuiUrl + "/oauth2/callback&state=#{state}&nonce=#{nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user%20search-user&code_challenge=#{code_challenge}&code_challenge_method=S256&prompt=")
         .formParam("username", s"${email}")
         .formParam("password", s"${password}")
         .formParam("azureLoginEnabled", "true")
@@ -96,7 +97,8 @@ object XuiHelper {
       //see xui-webapp cookie capture in the Homepage scenario for details of why this is being used
       .exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
         .withMaxAge(28800)
-        .withSecure(true)))
+        .withDomain(xuiUrl.replace("https://", ""))
+        .withSecure(false)))
 
       .exec(http("XUI_Login_ConfigurationUI")
         .get(xuiUrl + "/external/configuration-ui/")
