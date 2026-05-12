@@ -61,6 +61,7 @@
         <cve>CVE-2025-67735</cve>
         <cve>CVE-2026-33870</cve>
         <cve>CVE-2026-33871</cve>
+        <cve>CVE-2026-41417</cve>
     </suppress>
 
     <!-- log4j -->
