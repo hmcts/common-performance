@@ -93,6 +93,7 @@ Ensure your `.gitmodules` file includes:
 [submodule "common/common-performance"]
     path = common/common-performance
     url = git@github.com:hmcts/common-performance.git
+    branch = master
 ```
 
 ### 2. `settings.gradle`
