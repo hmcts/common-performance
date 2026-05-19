@@ -7,11 +7,12 @@
         <cve>CVE-2025-1686</cve>
     </suppress>
 
-    <!-- azure-identity -->
+    <!-- azure -->
     <suppress>
-        <packageUrl regex="true">^pkg:maven/com\.azure/azure-identity@.*$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/com\.azure/.*$</packageUrl>
         <cve>CVE-2023-36415</cve>
         <cve>CVE-2024-35255</cve>
+        <cve>CVE-2026-33117</cve>
     </suppress>
 
     <!-- msal4j -->
@@ -40,17 +41,7 @@
 
     <!-- gatling -->
     <suppress>
-        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-cli@.*$</packageUrl>
-        <cve>CVE-2025-51306</cve>
-        <cve>CVE-2025-51308</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-model_2\.13@.*$</packageUrl>
-        <cve>CVE-2025-51306</cve>
-        <cve>CVE-2025-51308</cve>
-    </suppress>
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-util_2\.13@.*$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-(cli|model_2\.13|util_2\.13)@.*$</packageUrl>
         <cve>CVE-2025-51306</cve>
         <cve>CVE-2025-51308</cve>
     </suppress>
@@ -62,17 +53,27 @@
         <cve>CVE-2026-33870</cve>
         <cve>CVE-2026-33871</cve>
         <cve>CVE-2026-41417</cve>
+        <cve>CVE-2026-42577</cve>
+        <cve>CVE-2026-42578</cve>
+        <cve>CVE-2026-42579</cve>
+        <cve>CVE-2026-42580</cve>
+        <cve>CVE-2026-42581</cve>
+        <cve>CVE-2026-42582</cve>
+        <cve>CVE-2026-42583</cve>
+        <cve>CVE-2026-42584</cve>
+        <cve>CVE-2026-42585</cve>
+        <cve>CVE-2026-42586</cve>
+        <cve>CVE-2026-42587</cve>
+        <cve>CVE-2026-44248</cve>
     </suppress>
 
     <!-- log4j -->
     <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-api@.*$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/.*$</packageUrl>
         <cve>CVE-2025-68161</cve>
-    </suppress>
-
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-core@.*$</packageUrl>
-        <cve>CVE-2025-68161</cve>
+        <cve>CVE-2026-34479</cve>
+        <cve>CVE-2026-34477</cve>
+        <cve>CVE-2026-34480</cve>
     </suppress>
 
 </suppressions>
