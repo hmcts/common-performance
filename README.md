@@ -54,10 +54,26 @@ A Git submodule is a repository embedded inside another repository.
 Submodules allow you to keep a Git repository as a subdirectory of another Git repository.
 
 > ⚡ **Important:**
-> - Submodules are _not_ automatically updated.
-> - They point to a specific commit of the submodule repo.
-> - Updates to the submodule must be pulled manually.
-> - Once updates are pulled, they will need to be committed to your project's repo.
+> - The common-performance submodule is automatically updated in your project by Renovate. Ensure the `renovate.json` file in your project contains the following (see this [JIRA ticket](https://tools.hmcts.net/jira/browse/PERF-82) for further information and full setup instructions):
+>```json
+>{
+>  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+>  "extends": [
+>    "local>hmcts/.github:renovate-config"
+>  ],
+>  "git-submodules": {
+>    "enabled": true
+>  },
+>  "schedule": ["at any time"],
+>  "packageRules": [
+>    {
+>      "matchManagers": ["git-submodules"],
+>      "matchDepNames": ["common/common-performance"],
+>      "automerge": true
+>    }
+>  ]
+>}
+>```
 
 ---
 
