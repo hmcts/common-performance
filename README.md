@@ -141,7 +141,7 @@ Initialise the submodule when cloned by Jenkins by adding the following before t
 call to `enablePerformanceTest()`:
 ```groovy
 afterAlways('checkout') {
-    sh """ git submodule update --init --recursive"""
+    sh """git submodule update --init --recursive --remote"""
 }
 ```
 
