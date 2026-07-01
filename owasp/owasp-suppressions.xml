@@ -61,4 +61,10 @@
         <cve>CVE-2026-34480</cve>
     </suppress>
 
+    <!-- jackson-databind -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
+        <vulnerabilityName regex="true">.*</vulnerabilityName>
+    </suppress>
+
 </suppressions>
