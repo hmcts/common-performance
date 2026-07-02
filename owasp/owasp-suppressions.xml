@@ -67,4 +67,10 @@
         <vulnerabilityName regex="true">.*</vulnerabilityName>
     </suppress>
 
+    <!-- jmespath -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/io\.burt/jmespath.*$</packageUrl>
+        <vulnerabilityName regex="true">.*</vulnerabilityName>
+    </suppress>
+
 </suppressions>
