@@ -67,4 +67,11 @@
         <vulnerabilityName regex="true">.*</vulnerabilityName>
     </suppress>
 
+    <!-- jmespath -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/io\.burt/jmespath.*$</packageUrl>
+        <cve>CVE-2022-32511</cve>
+        <cve>CVE-2026-54133</cve>
+    </suppress>
+
 </suppressions>
