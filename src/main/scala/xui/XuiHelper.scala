@@ -82,25 +82,23 @@ object XuiHelper {
 
   def Login(email: String, password: String) = {
 
-    group("XUI_000_Login") {
-      exec(http("XUI_Login_LoginRequest")
-        .post(IdamUrl + "/login?client_id=xuiwebapp&redirect_uri=" + xuiUrl + "/oauth2/callback&state=#{state}&nonce=#{nonce}&response_type=code&scope=profile%20openid%20roles%20manage-user%20create-user%20search-user&code_challenge=#{code_challenge}&code_challenge_method=S256&prompt=")
-        .formParam("username", s"${email}")
-        .formParam("password", s"${password}")
-        .formParam("azureLoginEnabled", "true")
-        .formParam("mojLoginEnabled", "true")
-        .formParam("selfRegistrationEnabled", "false")
-        .formParam("_csrf", "#{csrf}")
+    group("XUI_000_LoginEnterEmail") {
+      exec(http("XUI_Login_EnterEmail")
+        .post("/enter-email")
         .headers(Headers.navigationHeader)
-        .headers(Headers.postHeader)
-        .check(regex("Manage cases")))
+        .formParam("email", s"${email}")
+        .formParam("_csrf", "#{csrf}")
+        .check(substring("Enter your password")))
+    }
 
-      //see xui-webapp cookie capture in the Homepage scenario for details of why this is being used
-      //UPDATE MAY 2026: This is no longer required, so could probably be removed in the future
-      //.exec(addCookie(Cookie("xui-webapp", "#{xuiWebAppCookie}")
-      //  .withMaxAge(28800)
-      //  .withDomain(xuiUrl.replace("https://", ""))
-      //  .withSecure(false)))
+    .group("XUI_000_Login") {
+      exec(http("XUI_Login_EnterPassword")
+        .post("/enter-password")
+        .headers(Headers.navigationHeader)
+        .formParam("action", "_submit")
+        .formParam("password", s"${password}")
+        .formParam("_csrf", "#{csrf}")
+        .check(regex("Manage cases")))
 
       .exec(http("XUI_Login_ConfigurationUI")
         .get(xuiUrl + "/external/configuration-ui/")
