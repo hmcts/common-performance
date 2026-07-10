@@ -24,6 +24,12 @@
       "matchManagers": ["gradle-wrapper"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "description": "Keep scala-library on the Scala 2.13 line for Gatling compatibility",
+      "matchManagers": ["gradle"],
+      "matchPackageNames": ["org.scala-lang:scala-library"],
+      "allowedVersions": "/^2\\.13\\./"
     }
   ]
 }
