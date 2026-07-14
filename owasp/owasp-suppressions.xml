@@ -15,44 +15,11 @@
         <cve>CVE-2024-35255</cve>
     </suppress>
 
-    <!-- sbt -->
-    <suppress>
-        <packageUrl>pkg:maven/org.scala-sbt/launcher-interface@1.4.4</packageUrl>
-        <cve>CVE-2023-46122</cve>
-    </suppress>
-
-    <!-- jline -->
-    <suppress>
-        <packageUrl>pkg:maven/org.scala-sbt.jline/jline@2.14.7-sbt-9c3b6aca11c57e339441442bbf58e550cdfecb79</packageUrl>
-        <cve>CVE-2023-50572</cve>
-    </suppress>
-
-    <!-- sbinary -->
-    <suppress>
-        <packageUrl>pkg:maven/org.scala-sbt/sbinary_2.13@0.5.1</packageUrl>
-        <cve>CVE-2023-46122</cve>
-    </suppress>
-
     <!-- gatling -->
     <suppress>
         <packageUrl regex="true">^pkg:maven/io\.gatling/gatling-shared-(cli|model_2\.13|util_2\.13)@.*$</packageUrl>
         <cve>CVE-2025-51306</cve>
         <cve>CVE-2025-51308</cve>
-    </suppress>
-
-    <!-- netty -->
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/io\.netty/.*$</packageUrl>
-        <vulnerabilityName regex="true">.*</vulnerabilityName>
-    </suppress>
-
-    <!-- log4j -->
-    <suppress>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/.*$</packageUrl>
-        <cve>CVE-2025-68161</cve>
-        <cve>CVE-2026-34479</cve>
-        <cve>CVE-2026-34477</cve>
-        <cve>CVE-2026-34480</cve>
     </suppress>
 
     <!-- jackson-databind -->
