@@ -17,7 +17,7 @@ dependencies {
     implementation 'io.gatling:gatling-app:3.15.1'
     implementation 'org.scala-lang:scala-library:2.13.18'
     implementation 'com.google.code.gson:gson:2.14.0'
-    implementation 'com.azure:azure-security-keyvault-secrets:4.11.0'
+    implementation 'com.azure:azure-security-keyvault-secrets:4.11.1'
     implementation 'com.azure:azure-identity:1.18.4'
     implementation 'org.jsoup:jsoup:1.22.2'
     testImplementation 'org.scalatest:scalatest_2.13:3.3.0-SNAP4'
