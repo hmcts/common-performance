@@ -6,7 +6,7 @@
   "schedule": ["at any time"],
   "packageRules": [
     {
-      "description": "Auto-merge Gradle dependency/plugin patch/minor updates after 14 days",
+      "description": "Auto-merge Gradle dependency and build plugin patch/minor updates after 14 days",
       "matchManagers": ["gradle"],
       "matchUpdateTypes": ["patch", "minor"],
       "minimumReleaseAge": "14 days",

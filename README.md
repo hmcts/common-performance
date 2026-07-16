@@ -5,6 +5,7 @@ A shared library of utilities designed to make performance testing easier and mo
 This repository is intended to be imported into Gatling projects as a **Git submodule**, allowing common functionality to be reused and updated centrally.
 
 **Current Features:**
+- 🏗️ Shared Gradle Build Logic
 - 📂 CCD Helper
 - 🧩 XUI Helper
 - 📡 ElasticSearch Feeder
@@ -20,6 +21,7 @@ This repository is intended to be imported into Gatling projects as a **Git subm
 
 - [About Git Submodules](#-about-git-submodules)
 - [Setup Instructions](#-setup-instructions)
+- [Shared Gradle Build Logic](#-shared-gradle-build-logic)
 - [CCD Helper](#-ccd-helper)
   - [Search Cases](#-search-cases)
   - [Create a Case](#-create-a-case)
@@ -200,6 +202,23 @@ you will also need to run this command to initialise the submodule after cloning
 ```bash
 git submodule update --init --recursive
 ```
+
+---
+
+# 🏗️ Shared Gradle Build Logic
+
+## 📖 Overview
+
+This repository contains a shared Gradle convention plugin that centralises 
+the common build configuration used by the HMCTS Gatling performance test 
+repositories. It provides a single place to maintain shared plugins, build tasks, 
+dependency management and common Gradle configuration, reducing duplication and 
+ensuring repositories remain consistent.
+
+## ▶️ Usage
+
+The shared Gradle convention plugin used by parent performance repositories is 
+documented separately in [build-logic/README.md](build-logic/README.md).
 
 ---
 
