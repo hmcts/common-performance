@@ -5,7 +5,7 @@ A shared library of utilities designed to make performance testing easier and mo
 This repository is intended to be imported into Gatling projects as a **Git submodule**, allowing common functionality to be reused and updated centrally.
 
 **Current Features:**
-- 🏗️ Shared Gradle Build Logic
+- 🏗 Shared Gradle Build Logic
 - 📂 CCD Helper
 - 🧩 XUI Helper
 - 📡 ElasticSearch Feeder
@@ -79,7 +79,7 @@ Submodules allow you to keep a Git repository as a subdirectory of another Git r
 
 ---
 
-# ⚙️ Setup Instructions
+# 🛠 Setup Instructions
 
 To add `common-performance` as a submodule into an existing Gatling project, run the following from the 
 root folder of your Gatling repository:
@@ -205,7 +205,7 @@ git submodule update --init --recursive
 
 ---
 
-# 🏗️ Shared Gradle Build Logic
+# 🏗 Shared Gradle Build Logic
 
 ## 📖 Overview
 
@@ -215,7 +215,7 @@ repositories. It provides a single place to maintain shared plugins, build tasks
 dependency management and common Gradle configuration, reducing duplication and 
 ensuring repositories remain consistent.
 
-## ▶️ Usage
+## 🧩 Usage
 
 The shared Gradle convention plugin used by parent performance repositories is 
 documented separately in [build-logic/README.md](build-logic/README.md).
