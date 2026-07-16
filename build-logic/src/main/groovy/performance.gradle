@@ -82,11 +82,7 @@ tasks.register('runSimulation', JavaExec) {
     jvmArgs += ['--add-opens=java.base/java.lang=ALL-UNNAMED']
 
     // Pass through all -D properties from command line
-    jvmArgs += System.properties.findAll { key, _ ->
-        key instanceof String && key != 'java.class.path'
-    }.collect { key, value ->
-        "-D${key}=${value}"
-    }
+    systemProperties gradle.startParameter.systemPropertiesArgs
 }
 
 //Generate stats per transaction for use in Jenkins
