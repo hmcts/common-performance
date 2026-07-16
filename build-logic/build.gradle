@@ -1,0 +1,9 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+// Plugin versions are defined in gradle.properties
+dependencies {
+    implementation "org.owasp:dependency-check-gradle:${owaspDependencyCheckPluginVersion}"
+    implementation "io.gatling.gradle:io.gatling.gradle.gradle.plugin:${gatlingGradlePluginVersion}"
+}
