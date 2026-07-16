@@ -72,6 +72,9 @@ tasks.register('runSimulation', JavaExec) {
     group = 'Gatling Test'
     description = 'Runs a specified Gatling simulation without interactive mode'
 
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
     classpath = sourceSets.gatling.runtimeClasspath
     mainClass.set('io.gatling.app.Gatling')
 
@@ -90,6 +93,9 @@ tasks.register('runSimulation', JavaExec) {
 tasks.register('generateStats', JavaExec) {
     dependsOn tasks.named('gatlingRun')
     dependsOn tasks.named('compileGatlingScala')
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
     mainClass.set('stats.GenerateStatsByTxn')
     classpath = sourceSets.gatling.runtimeClasspath + project(':common-performance').sourceSets.main.runtimeClasspath
 }
