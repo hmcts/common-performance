@@ -7,6 +7,10 @@ plugins {
 
 def performanceConfiguration = extensions.create('performance', PerformanceConfiguration)
 
+def java21Launcher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(21)
+}
+
 // Versions of Netty to be used
 def netty41Version = '4.1.136.Final' // Used by Azure
 def netty42Version = '4.2.16.Final'  // Used by Gatling
@@ -72,6 +76,7 @@ tasks.register('runSimulation', JavaExec) {
     group = 'Gatling Test'
     description = 'Runs a specified Gatling simulation without interactive mode'
 
+    javaLauncher = java21Launcher
     classpath = sourceSets.gatling.runtimeClasspath
     mainClass.set('io.gatling.app.Gatling')
 
@@ -90,6 +95,7 @@ tasks.register('runSimulation', JavaExec) {
 tasks.register('generateStats', JavaExec) {
     dependsOn tasks.named('gatlingRun')
     dependsOn tasks.named('compileGatlingScala')
+    javaLauncher = java21Launcher
     mainClass.set('stats.GenerateStatsByTxn')
     classpath = sourceSets.gatling.runtimeClasspath + project(':common-performance').sourceSets.main.runtimeClasspath
 }

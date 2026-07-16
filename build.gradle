@@ -26,14 +26,14 @@ dependencies {
 tasks.register('scalaTest', JavaExec) {
     group = "verification"
     description = "Runs ScalaTest tests using the ScalaTest runner"
-
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
     classpath = sourceSets.test.runtimeClasspath
     mainClass.set("org.scalatest.tools.Runner")
 
-    args = [
-            "-R", "build/classes/scala/test",
-            "-oD"
-    ]
+    args = ["-R", "build/classes/scala/test",
+            "-oD"]
 }
 
 //disable the default test task as the scalaTest task will be used instead
