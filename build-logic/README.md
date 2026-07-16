@@ -35,11 +35,19 @@ plugins {
     id 'performance'
 }
 
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
 performance {
     simulationClass = 'simulations.ExampleSimulation'
     transactionNamesToGraph = ['ExampleTransaction']
 }
 ```
+
+Note: the Java toolchain is required by Jenkins tooling to select Java 21 before Gradle applies the convention plugin
 
 Use an empty list when no transactions need to be added to the Jenkins Gatling graphs:
 
