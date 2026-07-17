@@ -47,12 +47,9 @@ performance {
 }
 ```
 
-Note: the Java toolchain is required by Jenkins tooling to select Java 21 before Gradle applies the convention plugin
-
-Use an empty list when no transactions need to be added to the Jenkins Gatling graphs:
-
-```groovy
-transactionNamesToGraph = []
-```
+Notes:
+- the Java toolchain is required by Jenkins tooling to select Java 21 before Gradle applies the convention plugin
+- `transactionNamesToGraph` is optional, and allows custom transactions to be graphed in Jenkins 
+(see [here](../README.md#-stats-generator) for further details)
 
 Repository-specific Gradle configuration can still be added to the parent `build.gradle` when required.
