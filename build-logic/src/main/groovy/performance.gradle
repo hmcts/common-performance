@@ -7,7 +7,7 @@ plugins {
 
 def performanceConfiguration = extensions.create('performance', PerformanceConfiguration)
 
-// Versions of Netty to be used
+// Align the required Netty 4.1 and 4.2 dependencies
 def netty41Version = '4.1.136.Final' // Used by Azure
 def netty42Version = '4.2.16.Final'  // Used by Gatling
 
@@ -36,8 +36,7 @@ tasks.withType(Copy).configureEach {
 allprojects {
     configurations.configureEach {
         resolutionStrategy.eachDependency { details ->
-            if (details.requested.group == 'io.netty' &&
-                    details.requested.version != null) {
+            if (details.requested.group == 'io.netty' && details.requested.version != null) {
                 if (details.requested.version.startsWith('4.2.')) {
                     details.useVersion netty42Version
                 } else if (details.requested.version.startsWith('4.1.')) {
@@ -68,26 +67,8 @@ configurations {
     gatlingRuntimeOnly.extendsFrom runtimeOnly
 }
 
-tasks.register('runSimulation', JavaExec) {
-    group = 'Gatling Test'
-    description = 'Runs a specified Gatling simulation without interactive mode'
-
-    javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-    classpath = sourceSets.gatling.runtimeClasspath
-    mainClass.set('io.gatling.app.Gatling')
-
-    // JVM args required for Java 21
-    jvmArgs += ['--add-opens=java.base/java.lang=ALL-UNNAMED']
-
-    // Pass through all -D properties from command line
-    systemProperties gradle.startParameter.systemPropertiesArgs
-}
-
-//Generate stats per transaction for use in Jenkins
+// Generate stats per transaction for use in Jenkins
 tasks.register('generateStats', JavaExec) {
-    dependsOn tasks.named('gatlingRun')
     dependsOn tasks.named('compileGatlingScala')
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(21)
@@ -97,8 +78,6 @@ tasks.register('generateStats', JavaExec) {
 }
 
 tasks.named('gatlingRun') {
-    dependsOn tasks.named('runSimulation')
-    enabled = false
     finalizedBy tasks.named('generateStats')
 }
 
@@ -107,13 +86,11 @@ afterEvaluate {
         throw new GradleException('performance.simulationClass must be configured in build.gradle')
     }
 
-    tasks.named('runSimulation', JavaExec) {
-        args = ['-s', performance.simulationClass,
-                '-rf', layout.buildDirectory.dir('reports/gatling').get().asFile.absolutePath
-        ]
+    tasks.named('gatlingRun') {
+        simulationClassName = performanceConfiguration.simulationClass
     }
 
-    tasks.named('generateStats', JavaExec) {
-        args = performance.transactionNamesToGraph
+    tasks.named('generateStats') {
+        args = performanceConfiguration.transactionNamesToGraph
     }
 }

@@ -1,6 +1,6 @@
 # Shared Gradle build logic
 
-This directory contains the shared Gradle configuration used by the Gatling performance test repositories.
+This directory contains the shared Gradle build logic used by the Gatling performance test repositories.
 
 The main configuration is in `src/main/groovy/performance.gradle`
 
@@ -12,8 +12,7 @@ It configures:
 - OWASP Dependency Check
 - Netty version alignment
 - Gatling source directories
-- The runSimulation task
-- The generateStats task
+- The `generateStats` task
 
 Plugin and dependency versions are defined in `gradle.properties`
 
@@ -27,8 +26,7 @@ pluginManagement {
 }
 ```
 
-The existing parent `build.gradle` can be replaced, by simply apply the shared configuration 
-and defining the necessary customisations:
+The existing parent `build.gradle` can then be simplified to applying the shared plugin and providing the repository-specific configuration:
 
 ```groovy
 plugins {
@@ -46,10 +44,20 @@ performance {
     transactionNamesToGraph = ['ExampleTransaction']
 }
 ```
+- `simulationClass` is mandatory and should point to the location of the Gatling simulation to be run.
+- `transactionNamesToGraph` is optional. When omitted, no individual transactions are added to the Jenkins Gatling graphs.
 
-Notes:
-- the Java toolchain is required by Jenkins tooling to select Java 21 before Gradle applies the convention plugin
-- `transactionNamesToGraph` is optional, and allows custom transactions to be graphed in Jenkins 
-(see [here](../README.md#-stats-generator) for further details)
+### Repository-specific configuration
 
-Repository-specific Gradle configuration can still be added to the parent `build.gradle` when required.
+Repositories can still define additional Gradle or Gatling configuration in their own `build.gradle` when required.
+
+As an example, Gatling uses the JVM’s standard heap sizing by default. 
+Additional JVM arguments can be appended if a repository requires custom memory settings or other JVM options:
+
+```groovy
+gatling {
+    jvmArgs += ['-Xms2048m', '-Xmx4096m']
+}
+```
+
+This appends the additional JVM arguments while preserving the default JVM arguments configured by the Gatling Gradle plugin.
