@@ -33,6 +33,12 @@ plugins {
     id 'performance'
 }
 
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
 performance {
     simulationClass = 'simulations.ExampleSimulation'
     transactionNamesToGraph = ['ExampleTransaction']
