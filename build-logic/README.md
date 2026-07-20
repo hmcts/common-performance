@@ -51,8 +51,8 @@ performance {
 
 Repositories can still define additional Gradle or Gatling configuration in their own `build.gradle` when required.
 
-As an example, Gatling uses the JVM’s standard heap sizing by default. 
-Additional JVM arguments can be appended if a repository requires custom memory settings or other JVM options:
+As an example, Gatling uses a default maximum heap size of 1 GB. 
+Additional JVM arguments can be configured when a repository requires different memory settings or other JVM options:
 
 ```groovy
 gatling {
