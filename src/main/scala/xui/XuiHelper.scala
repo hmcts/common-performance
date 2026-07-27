@@ -62,9 +62,7 @@ object XuiHelper {
         .get(xuiUrl + "/auth/login")
         .headers(Headers.navigationHeader)
         .check(css("input[name='_csrf']", "value").saveAs("csrf"))
-        .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state"))
-        .check(regex("nonce=(.*)&amp;response_type").saveAs("nonce"))
-        .check(regex("code_challenge=(.*)&amp;code_challenge_method").saveAs("code_challenge")))
+        .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state")))
 
       .exitHereIfFailed
     }
@@ -84,7 +82,7 @@ object XuiHelper {
 
     group("XUI_000_LoginEnterEmail") {
       exec(http("XUI_Login_EnterEmail")
-        .post("/enter-email")
+        .post(IdamUrl + "/enter-email")
         .headers(Headers.navigationHeader)
         .formParam("email", s"${email}")
         .formParam("_csrf", "#{csrf}")
@@ -93,7 +91,7 @@ object XuiHelper {
 
     .group("XUI_000_LoginSubmit") {
       exec(http("XUI_Login_EnterPassword")
-        .post("/enter-password")
+        .post(IdamUrl + "/enter-password")
         .headers(Headers.navigationHeader)
         .formParam("action", "_submit")
         .formParam("password", s"${password}")
