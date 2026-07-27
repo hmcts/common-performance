@@ -91,7 +91,7 @@ object XuiHelper {
         .check(substring("Enter your password")))
     }
 
-    .group("XUI_000_Login") {
+    .group("XUI_000_LoginSubmit") {
       exec(http("XUI_Login_EnterPassword")
         .post("/enter-password")
         .headers(Headers.navigationHeader)
