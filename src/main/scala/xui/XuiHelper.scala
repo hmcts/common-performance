@@ -61,8 +61,7 @@ object XuiHelper {
       .exec(http("XUI_Homepage_AuthLogin")
         .get(xuiUrl + "/auth/login")
         .headers(Headers.navigationHeader)
-        .check(css("input[name='_csrf']", "value").saveAs("csrf"))
-        .check(regex("/oauth2/callback&amp;state=(.*)&amp;nonce=").saveAs("state")))
+        .check(css("input[name='_csrf']", "value").saveAs("csrf")))
 
       .exitHereIfFailed
     }
