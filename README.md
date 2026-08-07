@@ -28,6 +28,8 @@ This repository is intended to be imported into Gatling projects as a **Git subm
   - [Delete Citizen](#-delete-citizen)
 - [CCD Helper](#-ccd-helper)
   - [Search Cases](#-search-cases)
+  - [Search Cases as Citizen](#-search-cases-as-citizen)
+  - [Get a Case](#-get-a-case)
   - [Create a Case](#-create-a-case)
   - [Add a Case Event](#-add-a-case-event)
   - [Assign a Case](#-assign-a-case)
@@ -431,6 +433,75 @@ to the request using `additionalChecks`
 
 Ensure the query JSON is placed in the `resources` directory or a subfolder and follows the structure expected by CCD APIs (in this case
 a valid ElasticSearch query). A `_source` object should be defined in the query wherever possible to return only fields required.
+
+---
+
+### 🧑 Search Cases as Citizen
+
+Authenticates as a citizen and returns cases available to that user for the specified case type.
+
+```scala
+CcdHelper.searchCasesAsCitizen(userEmail, userPassword, caseType[, additionalChecks])
+```
+
+**Parameters:**
+- `userEmail` – citizen user to authenticate as
+- `userPassword` – password for the user
+- `caseType` – predefined CcdCaseType
+- `additionalChecks` – optional list of additional checks to perform on the request 
+(the full case data JSON is returned in the response)
+
+**Example:**
+```scala
+.exec(CcdHelper.searchCasesAsCitizen(
+  "#{user}",
+  "#{password}",
+  CcdCaseTypes.PROBATE_GrantOfRepresentation,
+  additionalChecks = Seq(
+    jsonPath("$[0].state").saveAs("caseState")
+  )
+))
+```
+
+**Outputs:**
+- `caseId` – ID of the first case returned
+- Any values saved using `additionalChecks`
+
+---
+
+### 📄 Get a Case
+
+Authenticates and retrieves a specific CCD case by case ID.
+
+```scala
+CcdHelper.getCase(userEmail, userPassword, caseType, caseId[, additionalChecks])
+```
+
+**Parameters:**
+- `userEmail` – user to authenticate as
+- `userPassword` – password for the user
+- `caseType` – predefined CcdCaseType
+- `caseId` – ID of the case to retrieve
+- `additionalChecks` – optional list of additional checks to perform on the request
+
+**Example:**
+```scala
+.exec(CcdHelper.getCase(
+  "#{user}",
+  "#{password}",
+  CcdCaseTypes.PROBATE_GrantOfRepresentation,
+  "#{caseId}",
+  additionalChecks = Seq(
+    jsonPath("$.state").saveAs("caseState")
+  )
+))
+```
+
+**Outputs:**
+- None by default. The request checks that the returned case ID and case type match the supplied values.
+- Any values saved using `additionalChecks`
+
+---
 
 ### 🏛 Create a Case
 

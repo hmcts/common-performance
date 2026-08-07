@@ -81,6 +81,33 @@ object CcdHelper {
       .check(additionalChecks: _*)
     )
 
+  def searchCasesAsCitizen(userEmail: String, userPassword: String, caseType: CcdCaseType, additionalChecks: Seq[HttpCheck] = Seq.empty) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+      .exec(http("CCD_SearchCasesAsCitizen")
+        .get(ccdAPIURL + s"/citizens/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .check(jsonPath("$[0].id").saveAs("caseId"))
+        .check(additionalChecks: _*)
+      )
+
+  def getCase(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
+
+    exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
+
+      .exec(http("CCD_GetCase")
+        .get(ccdAPIURL + s"/caseworkers/#{idamId}/jurisdictions/${caseType.jurisdictionId}/case-types/${caseType.caseTypeId}/cases/$caseId")
+        .header("Authorization", "Bearer #{bearerToken}")
+        .header("ServiceAuthorization", "#{authToken}")
+        .header("Content-Type", "application/json")
+        .check(jsonPath("$.case_type_id").is(caseType.caseTypeId))
+        .check(jsonPath("$.id").is(caseId))
+        .check(additionalChecks: _*)
+      )
+
   def createCase(userEmail: String, userPassword: String, caseType: CcdCaseType, eventName: String, payloadPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
