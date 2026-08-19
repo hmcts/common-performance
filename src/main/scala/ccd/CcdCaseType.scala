@@ -80,6 +80,13 @@ object CcdCaseTypes {
     microservice = "iac"
   )
 
+  val PCS_PCS = CcdCaseType(
+    name = "PCS_PCS",
+    jurisdictionId = "PCS",
+    caseTypeId = "PCS",
+    microservice = "ccd_data"
+  )
+
   val PRIVATELAW_PRLAPPS = CcdCaseType(
     name = "PRIVATELAW_PRLAPPS",
     jurisdictionId = "PRIVATELAW",
