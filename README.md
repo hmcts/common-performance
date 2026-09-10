@@ -971,7 +971,8 @@ Authenticate locally or on a VM and retrieve the required secrets in Gatling:
 2. Add the following lines to your Gatling scenario, to fetch the secret from Key Vault 
 based on the vault and secret name passed to the shared function. The third argument used is to reference the 
 Jenkins Environment Variable name defined in the Jenkinsfile_nightly file (optional, defaults to `CLIENT_SECRET`), 
-which will be required if the simulation is setup for use in Jenkins:
+which will be required if the simulation is setup for use in Jenkins (see the [Jenkins](#-jenkins-instructions) 
+section below for further details):
    ```scala
    import utilities.AzureKeyVault
    
@@ -1003,6 +1004,80 @@ which will be required if the simulation is setup for use in Jenkins:
   ```
 
 This ensures secure and consistent secret management for both local and CI/CD environments.
+
+### 🏗️ Jenkins Instructions
+
+- Ensure the following sections are added to the `Jenkinsfile_nightly` in your repo:
+  ```groovy
+  def secrets = [
+    'ccd-perftest': [ //Vault name
+      secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET') //Secret name, variable name (see step 2 above for details)
+    ]
+  ]
+
+  static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
+  }
+  ```
+- Add the following line inside the `withNightlyPipeline` block, right at the top:
+  ```groovy
+  loadVaultSecrets(secrets)
+  ```
+
+**Example Jenkinsfile_nightly:**
+
+```groovy
+#!groovy
+
+properties([
+        pipelineTriggers([cron('H 08 * * 1-5')]),
+        //A build parameter TEST_TYPE is used to tell the script to use the pipeline simulation configuration
+        parameters([
+                choice(name: 'TEST_TYPE', choices: 'pipeline', description: 'Test type (must be \'pipeline\' for Jenkins use)')
+        ])
+])
+
+@Library("Infrastructure@2.4.9") _
+
+def product = "nfdiv"
+def component = "frontend"
+
+def secrets = [
+        'ccd-perftest': [
+                secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+  [$class     : 'AzureKeyVaultSecret',
+   secretType : 'Secret',
+   name       : secretName,
+   version    : '',
+   envVariable: envVar
+  ]
+}
+
+withNightlyPipeline("java", product, component) {
+
+  loadVaultSecrets(secrets)
+
+  afterAlways('checkout') {
+    sh """git submodule update --init --recursive --remote"""
+  }
+
+  enablePerformanceTest(timeout=20, perfGatlingAlerts=true, perfRerunOnFail=true)
+
+  after('performanceTest') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+  }
+
+}
+```
 
 ---
 
