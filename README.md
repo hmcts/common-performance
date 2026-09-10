@@ -1005,7 +1005,9 @@ section below for further details):
 
 This ensures secure and consistent secret management for both local and CI/CD environments.
 
-### 🏗️ Jenkins Instructions
+---
+
+### 🏗 Jenkins Instructions
 
 - Ensure the following sections are added to the `Jenkinsfile_nightly` in your repo:
   ```groovy
@@ -1029,55 +1031,55 @@ This ensures secure and consistent secret management for both local and CI/CD en
   loadVaultSecrets(secrets)
   ```
 
-**Example Jenkinsfile_nightly:**
-
-```groovy
-#!groovy
-
-properties([
-        pipelineTriggers([cron('H 08 * * 1-5')]),
-        //A build parameter TEST_TYPE is used to tell the script to use the pipeline simulation configuration
-        parameters([
-                choice(name: 'TEST_TYPE', choices: 'pipeline', description: 'Test type (must be \'pipeline\' for Jenkins use)')
-        ])
-])
-
-@Library("Infrastructure@2.4.9") _
-
-def product = "nfdiv"
-def component = "frontend"
-
-def secrets = [
-        'ccd-perftest': [
-                secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
-        ]
-]
-
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-  [$class     : 'AzureKeyVaultSecret',
-   secretType : 'Secret',
-   name       : secretName,
-   version    : '',
-   envVariable: envVar
+  **Example Jenkinsfile_nightly:**
+  
+  ```groovy
+  #!groovy
+  
+  properties([
+          pipelineTriggers([cron('H 08 * * 1-5')]),
+          //A build parameter TEST_TYPE is used to tell the script to use the pipeline simulation configuration
+          parameters([
+                  choice(name: 'TEST_TYPE', choices: 'pipeline', description: 'Test type (must be \'pipeline\' for Jenkins use)')
+          ])
+  ])
+  
+  @Library("Infrastructure@2.4.9") _
+  
+  def product = "nfdiv"
+  def component = "frontend"
+  
+  def secrets = [
+          'ccd-perftest': [
+                  secret('ccd-api-gateway-oauth2-client-secret', 'CLIENT_SECRET')
+          ]
   ]
-}
-
-withNightlyPipeline("java", product, component) {
-
-  loadVaultSecrets(secrets)
-
-  afterAlways('checkout') {
-    sh """git submodule update --init --recursive --remote"""
+  
+  static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
   }
-
-  enablePerformanceTest(timeout=20, perfGatlingAlerts=true, perfRerunOnFail=true)
-
-  after('performanceTest') {
-    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+  
+  withNightlyPipeline("java", product, component) {
+  
+    loadVaultSecrets(secrets)
+  
+    afterAlways('checkout') {
+      sh """git submodule update --init --recursive --remote"""
+    }
+  
+    enablePerformanceTest(timeout=20, perfGatlingAlerts=true, perfRerunOnFail=true)
+  
+    after('performanceTest') {
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+    }
+  
   }
-
-}
-```
+  ```
 
 ---
 
