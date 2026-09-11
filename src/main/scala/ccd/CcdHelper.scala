@@ -131,7 +131,7 @@ object CcdHelper {
       .check(additionalChecks: _*)
     )
 
-  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, eventName: String, payloadPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty) =
+  def addCaseEvent(userEmail: String, userPassword: String, caseType: CcdCaseType, caseId: String, eventName: String, payloadPath: String, additionalChecks: Seq[HttpCheck] = Seq.empty, additionalTriggerChecks: Seq[HttpCheck] = Seq.empty) =
 
     exec(authenticate(userEmail, userPassword, caseType.microservice, caseType.clientId))
 
@@ -141,6 +141,7 @@ object CcdHelper {
       .header("ServiceAuthorization", "#{authToken}")
       .header("Content-Type", "application/json")
       .check(jsonPath("$.token").saveAs("eventToken"))
+      .check(additionalTriggerChecks: _*)
     )
 
     .exec(http(s"CCD_SubmitEvent_${eventName}")
