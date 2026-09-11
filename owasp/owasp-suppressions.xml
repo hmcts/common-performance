@@ -42,6 +42,13 @@
         <cve>CVE-2026-55831</cve>
         <cve>CVE-2026-55833</cve>
         <cve>CVE-2026-56816</cve>
+        <cve>CVE-2026-62380</cve>
+    </suppress>
+
+    <!-- project reactor -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/io\.projectreactor\.netty/reactor.*$</packageUrl>
+        <cve>CVE-2026-47874</cve>
     </suppress>
 
 </suppressions>
