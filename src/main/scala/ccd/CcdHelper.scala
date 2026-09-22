@@ -18,10 +18,24 @@ object CcdHelper {
 
     exec { session =>
       val resolvedEmail =
-      /* If the email value passed through is a gatling session reference e.g. "#{username}" then strip out the #{} and
-      retrieve the value of the variable from the session */
-        if (email.matches("""#\{.+}""")) session(email.substring(2, email.length - 1)).as[String]
-        else email
+        email match {
+          // Indexed Gatling session value, e.g. "#{user(0)}" or "#{user(1)}".
+          // This is used when multiple feeder records have been loaded with feed(feeder, n),
+          // which stores the values for each column as a Seq in the Gatling session.
+          case indexed if indexed.matches("""#\{.+\(\d+\)}""") =>
+            val expression = indexed.substring(2, indexed.length - 1)
+            val key = expression.substring(0, expression.indexOf("("))
+            val index = expression.substring(expression.indexOf("(") + 1, expression.indexOf(")")).toInt
+            session.attributes(key).asInstanceOf[Seq[Any]](index).toString
+
+          // Standard Gatling session value, e.g. "#{cw-user}"
+          case sessionRef if sessionRef.matches("""#\{.+}""") =>
+            session(sessionRef.substring(2, sessionRef.length - 1)).as[String]
+
+          // Literal value, e.g. "user@test.com"
+          case literal =>
+            literal
+        }
       session.set("resolvedEmail", resolvedEmail)
     }
 
