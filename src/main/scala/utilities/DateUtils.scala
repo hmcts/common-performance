@@ -1,6 +1,6 @@
 package utilities
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import scala.util.Random
 
@@ -10,11 +10,11 @@ object DateUtils {
 
   /** Returns the current date formatted */
   def getDateNow(format: String): String =
-    LocalDate.now().format(formatter(format))
+    LocalDateTime.now().format(formatter(format))
 
   /** Returns a past date by subtracting fixed years, months, days */
   def getDatePast(format: String, years: Int = 0, months: Int = 0, days: Int = 0): String =
-    LocalDate.now().minusYears(years).minusMonths(months).minusDays(days).format(formatter(format))
+    LocalDateTime.now().minusYears(years).minusMonths(months).minusDays(days).format(formatter(format))
 
   /** Returns a random past date by subtracting random years, months, days within provided ranges */
   def getDatePastRandom(format: String,
@@ -24,12 +24,12 @@ object DateUtils {
     val years = randomBetween(minYears, maxYears)
     val months = randomBetween(minMonths, maxMonths)
     val days = randomBetween(minDays, maxDays)
-    LocalDate.now().minusYears(years).minusMonths(months).minusDays(days).format(formatter(format))
+    LocalDateTime.now().minusYears(years).minusMonths(months).minusDays(days).format(formatter(format))
   }
 
   /** Returns a future date by adding fixed years, months, days */
   def getDateFuture(format: String, years: Int = 0, months: Int = 0, days: Int = 0): String =
-    LocalDate.now().plusYears(years).plusMonths(months).plusDays(days).format(formatter(format))
+    LocalDateTime.now().plusYears(years).plusMonths(months).plusDays(days).format(formatter(format))
 
   /** Returns a random future date by adding random years, months, days within provided ranges */
   def getDateFutureRandom(format: String,
@@ -39,7 +39,7 @@ object DateUtils {
     val years = randomBetween(minYears, maxYears)
     val months = randomBetween(minMonths, maxMonths)
     val days = randomBetween(minDays, maxDays)
-    LocalDate.now().plusYears(years).plusMonths(months).plusDays(days).format(formatter(format))
+    LocalDateTime.now().plusYears(years).plusMonths(months).plusDays(days).format(formatter(format))
   }
 
   def getRandomDayOfMonth(pad: Boolean = true): String = {
