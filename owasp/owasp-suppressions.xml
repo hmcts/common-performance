@@ -41,4 +41,53 @@
         <cve>CVE-2026-47874</cve>
     </suppress>
 
+    <!-- elastic search -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.elasticsearch/elasticsearch-tdigest.*$</packageUrl>
+        <cve>CVE-2026-72649</cve>
+        <cve>CVE-2024-52979</cve>
+        <cve>CVE-2025-37731</cve>
+        <cve>CVE-2026-103009</cve>
+        <cve>CVE-2026-78607</cve>
+        <cve>CVE-2025-68384</cve>
+        <cve>CVE-2026-102411</cve>
+        <cve>CVE-2026-103005</cve>
+        <cve>CVE-2026-103006</cve>
+        <cve>CVE-2026-103008</cve>
+        <cve>CVE-2026-56144</cve>
+        <cve>CVE-2026-56145</cve>
+        <cve>CVE-2026-56148</cve>
+        <cve>CVE-2026-63136</cve>
+        <cve>CVE-2026-63140</cve>
+        <cve>CVE-2026-63263</cve>
+        <cve>CVE-2026-72636</cve>
+        <cve>CVE-2026-72638</cve>
+        <cve>CVE-2026-72645</cve>
+        <cve>CVE-2026-72647</cve>
+        <cve>CVE-2026-72656</cve>
+        <cve>CVE-2026-72683</cve>
+        <cve>CVE-2026-72684</cve>
+        <cve>CVE-2026-72686</cve>
+        <cve>CVE-2026-72687</cve>
+        <cve>CVE-2026-82294</cve>
+        <cve>CVE-2026-82300</cve>
+        <cve>CVE-2026-94397</cve>
+        <cve>CVE-2026-94398</cve>
+        <cve>CVE-2026-94399</cve>
+        <cve>CVE-2025-37727</cve>
+        <cve>CVE-2025-68390</cve>
+        <cve>CVE-2026-56143</cve>
+        <cve>CVE-2026-56149</cve>
+        <cve>CVE-2026-94408</cve>
+        <cve>CVE-2026-72685</cve>
+        <cve>CVE-2026-102404</cve>
+        <cve>CVE-2026-102407</cve>
+    </suppress>
+
+    <!-- scala parser combinators -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.scala-lang\.modules/scala-parser-combinators.*$</packageUrl>
+        <cve>CVE-2017-1000034</cve>
+    </suppress>
+
 </suppressions>
