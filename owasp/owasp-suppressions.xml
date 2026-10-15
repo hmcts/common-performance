@@ -41,4 +41,16 @@
         <cve>CVE-2026-47874</cve>
     </suppress>
 
+    <!-- elastic search -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.elasticsearch/elasticsearch-tdigest@.*$</packageUrl>
+        <vulnerabilityName regex="true">.*</vulnerabilityName>
+    </suppress>
+
+    <!-- scala parser combinators -->
+    <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.scala-lang\.modules/scala-parser-combinators.*$</packageUrl>
+        <cve>CVE-2017-1000034</cve>
+    </suppress>
+
 </suppressions>
