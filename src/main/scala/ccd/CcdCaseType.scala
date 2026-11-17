@@ -42,14 +42,14 @@ object CcdCaseTypes {
     name = "DIVORCE_FinancialRemedyContested",
     jurisdictionId = "DIVORCE",
     caseTypeId = "FinancialRemedyContested",
-    microservice = "ccd_data"
+    microservice = "finrem_case_orchestration"
   )
 
   val DIVORCE_FinancialRemedyMVP2 = CcdCaseType(
     name = "DIVORCE_FinancialRemedyMVP2",
     jurisdictionId = "DIVORCE",
     caseTypeId = "FinancialRemedyMVP2",
-    microservice = "ccd_data"
+    microservice = "finrem_case_orchestration"
   )
 
   val DIVORCE_NFD = CcdCaseType(
